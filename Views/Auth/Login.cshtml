@@ -1,0 +1,210 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Connexion Responsable</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <style>
+            body {
+                margin: 0;
+                font-family: 'Great Vibes', cursive;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: url('/images/login-bg.png') no-repeat center center;
+                background-size: cover;
+            }
+
+            .overlay {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.35);
+            }
+
+            .card {
+                position: relative;
+                width: 420px;
+                background: white;
+                border-radius: 18px;
+                padding: 35px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                z-index: 2;
+                box-sizing: border-box;
+            }
+
+            .logo {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+
+                .logo img {
+                    width: 210px;
+                }
+
+            .title {
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+                color: #1f3c88;
+                font-family: Arial;
+            }
+
+            .subtitle {
+                text-align: center;
+                font-size: 12px;
+                color: #6b7a99;
+                margin-bottom: 25px;
+                font-family: Arial;
+            }
+
+            .input-group {
+                margin-bottom: 18px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            label {
+                font-size: 13px;
+                font-weight: bold;
+                color: #2c3e70;
+                font-family: Arial;
+            }
+
+            .input {
+                position: relative;
+                margin-top: 6px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+                .input i {
+                    position: absolute;
+                    left: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #14297a;
+                }
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 12px 12px 12px 38px;
+                border: 1px solid #d6dbe8;
+                border-radius: 10px;
+                outline: none;
+                font-family: Arial;
+            }
+
+                input:focus {
+                    border-color: #1f5eff;
+                }
+
+            .options {
+                display: flex;
+                justify-content: flex-end;
+                font-size: 12px;
+                margin-top: 10px;
+                color: #5a6b8a;
+                font-family: Arial;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 20px;
+                padding: 12px;
+                border: none;
+                border-radius: 10px;
+                background: #14297a;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                font-family: Arial;
+                box-sizing: border-box;
+            }
+
+                .btn:hover {
+                    background: #0e1d5c;
+                }
+
+            .error {
+                margin-top: 10px;
+                color: red;
+                font-size: 13px;
+                text-align: center;
+                font-family: Arial;
+            }
+
+            .footer {
+                margin-top: 15px;
+                text-align: center;
+                font-size: 11px;
+                color: #7b8db8;
+                font-family: Arial;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay"></div>
+
+    <div class="card">
+
+        <div class="logo">
+            <img src="/images/tt-logo.png" />
+        </div>
+
+        <div class="title">Connexion Responsable</div>
+        <div class="subtitle">Accès au système de gestion des formations</div>
+
+        <form method="post">
+
+            <div class="input-group">
+                <label>Matricule</label>
+                <div class="input">
+                    <i class="fa fa-user"></i>
+                    <input name="matricule" placeholder="Entrez votre matricule" />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <div class="input">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" name="password" placeholder="Entrez votre mot de passe" />
+                </div>
+            </div>
+
+            <div class="options">
+                <a href="#">Mot de passe oublié?</a>
+            </div>
+
+            <button class="btn" type="submit">
+                Se connecter
+            </button>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="error">@ViewBag.Error</div>
+            }
+
+        </form>
+
+        <div class="footer">
+            Accès réservé aux responsables
+        </div>
+
+    </div>
+
+</body>
+</html>

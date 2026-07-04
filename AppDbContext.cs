@@ -19,6 +19,7 @@ namespace Training_tunisie_telecome.Data
         public DbSet<Formation> Formations { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Responsable> Responsables { get; set; }
 
         // =======================
         // 🟢 MODEL CONFIGURATION
@@ -28,6 +29,9 @@ namespace Training_tunisie_telecome.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Responsable>()
+                .HasIndex(r => r.Matricule)
+                .IsUnique();
             // =======================
             // 👤 Employee
             // =======================
