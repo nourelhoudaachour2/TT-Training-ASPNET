@@ -13,12 +13,14 @@ namespace Training_tunisie_telecome.Controllers
             _context = context;
         }
 
+        // GET: Login
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        // POST: Login
         [HttpPost]
         public IActionResult Login(string matricule, string password)
         {
@@ -37,15 +39,18 @@ namespace Training_tunisie_telecome.Controllers
                 return View();
             }
 
+            // session login
             HttpContext.Session.SetString("user", user.Matricule);
 
-            return RedirectToAction("Index", "Home");
+            // redirect dashboard
+            return RedirectToAction("Index", "Dashboard");
         }
 
+        // Logout
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Auth");
         }
     }
 }
