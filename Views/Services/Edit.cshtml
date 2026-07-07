@@ -1,0 +1,426 @@
+﻿@model Training_tunisie_telecome.Models.Service
+
+@{
+    ViewData["Title"] = "Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #14297a;
+        margin-bottom: 8px;
+    }
+
+
+    .breadcrumb {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+
+        .breadcrumb span {
+            color: #14297a;
+            font-weight: 600;
+        }
+
+
+
+    /* CARD */
+
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+
+
+    /* HEADER */
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+
+    .header-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        background: #e8edff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+        .header-icon i {
+            font-size: 24px;
+            color: #14297a;
+        }
+
+
+
+
+    .header-text h3 {
+        color: #14297a;
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+
+
+    .header-text p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+
+
+    /* FORM */
+
+
+    .form-body {
+        margin-top: 25px;
+    }
+
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #14297a;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+
+
+    .form-control {
+        width: 100%;
+        height: 45px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 15px;
+        font-size: 14px;
+        outline: none;
+    }
+
+
+
+    textarea.form-control {
+        height: 100px;
+        padding-top: 12px;
+        resize: none;
+    }
+
+
+
+    .form-control:focus {
+        border-color: #14297a;
+        box-shadow: 0 0 0 3px rgba(20,41,122,.08);
+    }
+
+
+
+    /* ERROR */
+
+    .input-validation-error {
+        border: 2px solid #ef4444 !important;
+    }
+
+
+
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 14px;
+        margin-top: 8px;
+        display: block;
+    }
+
+
+
+
+    .validation-summary-errors {
+        background: #fdecec;
+        border-left: 5px solid #ef4444;
+        padding: 12px 20px;
+        border-radius: 12px;
+        color: #dc2626;
+        margin-bottom: 20px;
+    }
+
+
+
+
+
+    /* BUTTONS */
+
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+
+
+    .btn-save {
+        background: #14297a;
+        color: white;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+
+        .btn-save:hover {
+            background: #0d1b52;
+        }
+
+
+
+
+    .btn-cancel {
+        background: #fdeceb;
+        color: #d9362d;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+
+        .btn-cancel:hover {
+            background: #d9362d;
+            color: white;
+        }
+
+</style>
+
+
+
+
+<div>
+
+
+    <h1 class="page-title">
+        Modifier un service
+    </h1>
+
+
+
+
+    <div class="breadcrumb">
+
+        Accueil /
+        <span>Services</span>
+        /
+        Modifier
+
+    </div>
+
+
+
+
+
+    <div class="form-card">
+
+
+
+        <div class="form-header">
+
+
+            <div class="header-icon">
+
+                <i class="fa fa-building"></i>
+
+            </div>
+
+
+
+            <div class="header-text">
+
+
+                <h3>
+                    Informations du service
+                </h3>
+
+
+                <p>
+                    Modifier les informations du service
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+        <form asp-action="Edit" method="post">
+
+
+            <input type="hidden" asp-for="Id" />
+
+
+
+            <div class="form-body">
+
+
+                <div asp-validation-summary="ModelOnly"
+                     class="validation-summary-errors">
+                </div>
+
+
+
+
+
+                <div class="form-group">
+
+
+                    <label>
+                        Nom du service <span style="color:red">*</span>
+                    </label>
+
+
+
+                    <input asp-for="Name"
+                           class="form-control"
+                           placeholder="Ex: Direction des Systèmes d'Information" />
+
+
+
+                    <span asp-validation-for="Name"></span>
+
+
+
+                </div>
+
+
+
+
+
+
+                <div class="form-group">
+
+
+                    <label>
+                        Description
+                    </label>
+
+
+
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              placeholder="Décrivez le rôle et les missions du service...">
+</textarea>
+
+
+
+                    <span asp-validation-for="Description"></span>
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div class="buttons">
+
+
+
+                    <a asp-action="Index"
+                       class="btn-cancel">
+
+                        <i class="fa fa-arrow-left"></i>
+
+                        Annuler
+
+                    </a>
+
+
+
+
+
+                    <button type="submit"
+                            class="btn-save">
+
+
+                        <i class="fa fa-save"></i>
+
+                        Enregistrer
+
+
+                    </button>
+
+
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+        </form>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

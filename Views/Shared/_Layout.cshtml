@@ -4,13 +4,21 @@
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
     <meta charset="utf-8" />
+
     <title>@ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
     <style>
+
+
             * {
                 margin: 0;
                 padding: 0;
@@ -18,24 +26,36 @@
                 font-family: 'Segoe UI', Arial, sans-serif;
             }
 
+
+
             body {
                 background: #f4f2f8;
             }
 
+
+
+
             /* ================= SIDEBAR ================= */
+
+
             .sidebar {
                 position: fixed;
                 width: 215px;
                 height: 100vh;
-                background: #ffffff;
+                background: white;
                 border-right: 1px solid #ececf3;
                 padding: 0 16px 20px 16px;
                 display: flex;
                 flex-direction: column;
-                box-shadow: 2px 0 12px rgba(60, 24, 87, 0.04);
+                box-shadow: 2px 0 12px rgba(60,24,87,0.04);
             }
 
+
+
+
             /* LOGO */
+
+
             .logo {
                 display: flex;
                 align-items: center;
@@ -45,17 +65,30 @@
                 border-bottom: 1px solid #f0edf5;
             }
 
+
+
+
                 .logo img {
                     width: 175px;
                 }
 
+
+
+
+
             /* MENU */
+
+
             .menu {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
             }
+
+
+
+
 
                 .menu a {
                     display: flex;
@@ -67,28 +100,101 @@
                     color: #4a4a55;
                     font-size: 15px;
                     font-weight: 500;
-                    transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+                    transition: 0.2s;
                 }
+
+
+
+
 
                     .menu a i {
                         width: 20px;
                         text-align: center;
-                        font-size: 16px;
-                        color: #2b3a8f;
-                        transition: color 0.18s ease;
+                        font-size: 17px;
+                        opacity: 0.9;
+                        transition: 0.3s;
                     }
+
+
+
+
+
+                    /* COLORS FROM TT LOGO */
+
+
+                    .menu a:nth-child(1) i {
+                        color: #14297a;
+                    }
+
+
+
+                    .menu a:nth-child(2) i {
+                        color: #0099cc;
+                    }
+
+
+
+
+                    .menu a:nth-child(3) i {
+                        color: #f5b400;
+                    }
+
+
+
+
+                    .menu a:nth-child(4) i {
+                        color: #009b72;
+                    }
+
+
+
+
+                    .menu a:nth-child(5) i {
+                        color: #e6007e;
+                    }
+
+
+
+
+                    .menu a:nth-child(6) i {
+                        color: #ff8c00;
+                    }
+
+
+
+
+                    .menu a:nth-child(7) i {
+                        color: #7b2cbf;
+                    }
+
+
+
+
+
 
                     .menu a:hover {
                         background: #f3ecfb;
-                        color: #3d1857;
-                        transform: translateX(2px);
+                        color: #14297a;
+                        transform: translateX(3px);
                     }
 
+
+
+
+
                         .menu a:hover i {
-                            color: #3d1857;
+                            transform: scale(1.15);
                         }
 
+
+
+
+
+
+
             /* LOGOUT */
+
+
             .logout {
                 margin-top: 12px;
                 padding: 12px 14px;
@@ -100,27 +206,46 @@
                 color: #d9362d;
                 font-weight: 600;
                 font-size: 15px;
-                text-align: center;
                 border-radius: 10px;
                 cursor: pointer;
-                transition: background 0.18s ease, color 0.18s ease;
+                transition: 0.2s;
             }
+
+
+
+
 
                 .logout i {
                     font-size: 16px;
                 }
+
+
+
 
                 .logout:hover {
                     background: #d9362d;
                     color: white;
                 }
 
+
+
+
+
+
             /* ================= MAIN ================= */
+
+
             .main {
                 margin-left: 215px;
             }
 
-            /* ================= TOPBAR ================= */
+
+
+
+
+            /* TOPBAR */
+
+
             .topbar {
                 height: 68px;
                 background: white;
@@ -129,8 +254,12 @@
                 align-items: center;
                 padding: 0 28px;
                 border-bottom: 1px solid #ececf3;
-                box-shadow: 0 2px 10px rgba(60, 24, 87, 0.03);
+                box-shadow: 0 2px 10px rgba(60,24,87,0.03);
             }
+
+
+
+
 
             .topbar-left {
                 display: flex;
@@ -138,17 +267,31 @@
                 gap: 16px;
             }
 
+
+
+
+
                 .topbar-left i {
                     font-size: 18px;
-                    color: #2b3a8f;
+                    color: #14297a;
                     cursor: pointer;
                 }
 
+
+
+
+
                 .topbar-left h3 {
                     font-size: 19px;
-                    color: #2c2c2c;
+                    color: #14297a;
                     font-weight: 700;
                 }
+
+
+
+
+
+
 
             .topbar-right {
                 display: flex;
@@ -156,11 +299,19 @@
                 gap: 22px;
             }
 
+
+
+
+
             .user-info {
                 display: flex;
                 align-items: center;
                 gap: 10px;
             }
+
+
+
+
 
                 .user-info span {
                     font-size: 14px;
@@ -168,73 +319,239 @@
                     color: #2c2c2c;
                 }
 
+
+
+
+
+
                 .user-info img {
-                    width: 38px;
-                    height: 38px;
+                    width: 42px;
+                    height: 42px;
                     border-radius: 50%;
                     object-fit: cover;
                     border: 2px solid #f3ecfb;
                 }
 
+
+
+
+
+
+
             /* CONTENT */
+
+
             .content {
                 padding: 28px;
             }
+
     </style>
+
+
 </head>
+
+
 
 <body>
 
-    <!-- SIDEBAR -->
+
+
     <div class="sidebar">
 
+
+
         <div class="logo">
+
             <img src="/images/tt-logo.png" />
+
         </div>
+
+
+
 
         <div class="menu">
-            <a href="/Dashboard"><i class="fa fa-gauge"></i> Dashboard</a>
-            <a href="/Employees"><i class="fa fa-users"></i> Employés</a>
-            <a href="/Formateurs"><i class="fa fa-chalkboard-user"></i> Formateurs</a>
-            <a href="/Services"><i class="fa fa-building"></i> Services</a>
-            <a href="/Formations"><i class="fa fa-graduation-cap"></i> Formations</a>
-            <a href="/Attendances"><i class="fa fa-calendar"></i> Présence</a>
-            <a href="/Reporting"><i class="fa fa-chart-line"></i> Reporting</a>
+
+
+
+            <a href="/Dashboard">
+
+                <i class="fa fa-gauge"></i>
+
+                Dashboard
+
+            </a>
+
+
+
+
+            <a href="/Employees">
+
+                <i class="fa fa-users"></i>
+
+                Employés
+
+            </a>
+
+
+
+
+            <a href="/Formateurs">
+
+                <i class="fa fa-chalkboard-user"></i>
+
+                Formateurs
+
+            </a>
+
+
+
+
+            <a asp-controller="Services" asp-action="Index">
+
+                <i class="fa fa-building"></i>
+
+                Services
+
+            </a>
+
+
+
+
+            <a href="/Formations">
+
+                <i class="fa fa-graduation-cap"></i>
+
+                Formations
+
+            </a>
+
+
+
+
+            <a href="/Attendances">
+
+                <i class="fa fa-calendar"></i>
+
+                Présence
+
+            </a>
+
+
+
+
+            <a href="/Reporting">
+
+                <i class="fa fa-chart-line"></i>
+
+                Reporting
+
+            </a>
+
+
+
         </div>
 
+
+
+
+
+
         <a href="/Auth/Logout" class="logout" style="text-decoration:none;">
-            <i class="fa fa-right-from-bracket"></i> Déconnexion
+
+
+            <i class="fa fa-right-from-bracket"></i>
+
+            Déconnexion
+
+
         </a>
+
+
 
     </div>
 
-    <!-- MAIN -->
+
+
+
+
+
     <div class="main">
 
-        <!-- TOPBAR -->
+
+
         <div class="topbar">
 
+
+
             <div class="topbar-left">
+
+
                 <i class="fa fa-bars"></i>
+
+
                 <h3>@ViewData["Title"]</h3>
+
+
             </div>
+
+
+
+
 
             <div class="topbar-right">
 
+
+
                 <div class="user-info">
-                    <span>Responsable RH</span>
+
+
+                    <span>
+                        Responsable RH
+                    </span>
+
+
+
                     <img src="/images/responsable.jpeg" />
+
+
+
                 </div>
+
+
+
 
             </div>
 
+
+
+
         </div>
 
+
+
+
+
+
         <div class="content">
+
+
             @RenderBody()
+
+
         </div>
+
+
 
     </div>
 
+
+
+
+
+    @RenderSection("Scripts", required: false)
+
+
+
 </body>
+
 </html>

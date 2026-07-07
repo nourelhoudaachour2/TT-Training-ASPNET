@@ -1,0 +1,496 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.Service>
+
+@{
+    ViewData["Title"] = "Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+<style>
+
+    .services-container {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        font-family: 'Montserrat',sans-serif;
+    }
+
+
+
+
+    /* SEARCH */
+
+    .search-add {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+
+
+    .search-box {
+        width: 70%;
+        position: relative;
+    }
+
+
+
+    .search-icon-badge {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #14297a;
+        font-size: 15px;
+    }
+
+
+
+    .search-box input {
+        width: 100%;
+        height: 42px;
+        padding-left: 42px;
+        border-radius: 8px;
+        border: 1px solid #dfe3eb;
+        outline: none;
+        font-size: 14px;
+    }
+
+        .search-box input:focus {
+            border-color: #14297a;
+        }
+
+
+
+
+    /* ADD BUTTON */
+
+    .btn-add {
+        background: #14297a;
+        color: white;
+        padding: 9px 16px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+        .btn-add:hover {
+            background: #0d1b52;
+            color: white;
+        }
+
+
+
+
+    /* TABLE */
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+
+    thead th {
+        background: #fafafa;
+        padding: 12px;
+        text-align: center;
+        color: #14297a;
+        font-size: 13.5px;
+        font-weight: 700;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+
+
+    tbody td {
+        padding: 8px 15px;
+        height: 45px;
+        text-align: center;
+        color: #374151;
+        font-size: 14px;
+    }
+
+
+
+    .service-name {
+        font-weight: 500;
+        color: #111827;
+    }
+
+
+
+
+    /* ACTION ICONS */
+
+    .action-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 3px;
+        text-decoration: none;
+        font-size: 12px;
+    }
+
+
+
+    .details {
+        background: #ede9fe;
+        color: #6d28d9;
+    }
+
+
+
+    .edit {
+        background: #e0e7ff;
+        color: #14297a;
+    }
+
+
+
+    .delete {
+        background: #fce7f3;
+        color: #db2777;
+    }
+
+
+
+
+    /* ================= DELETE POPUP ================= */
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.45);
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+
+
+    .delete-modal {
+        width: 400px;
+        background: white;
+        border-radius: 18px;
+        padding: 35px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0,0,0,.25);
+    }
+
+
+
+    .delete-icon {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background: #fdeceb;
+        color: #d9362d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        font-size: 28px;
+    }
+
+
+
+    .delete-modal h3 {
+        margin-top: 20px;
+        color: #14297a;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+
+
+    .delete-modal p {
+        color: #6b7280;
+        margin: 15px 0 30px;
+        font-size: 15px;
+    }
+
+
+
+
+    /* BUTTONS */
+
+    .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+
+
+    .btn-modal-cancel,
+    .btn-modal-delete {
+        width: 170px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        opacity: 1 !important;
+    }
+
+
+
+    .btn-modal-cancel {
+        background: #fdeceb !important;
+        color: #d9362d !important;
+    }
+
+        .btn-modal-cancel:hover {
+            background: #d9362d !important;
+            color: white !important;
+        }
+
+
+
+    /* Bouton "Supprimer" : fond violet clair + texte violet foncé (comme la capture) */
+    .btn-modal-delete {
+        background: #ede9fe !important;
+        color: #6d28d9 !important;
+    }
+
+        .btn-modal-delete i {
+            color: #6d28d9 !important;
+        }
+
+        .btn-modal-delete:hover {
+            background: #ddd6fe !important;
+        }
+
+</style>
+<div class="services-container">
+
+
+    <div class="search-add">
+
+
+        <div class="search-box">
+
+            <div class="search-icon-badge">
+                <i class="fa fa-search"></i>
+            </div>
+
+            <input id="serviceSearch"
+                   type="text"
+                   placeholder="Rechercher un service..." />
+
+        </div>
+
+
+
+        <a asp-action="Create" class="btn-add">
+            <i class="fa fa-plus"></i>
+            Ajouter
+        </a>
+
+    </div>
+
+
+
+
+    <table id="serviceTable">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom du service</th>
+                <th>Description</th>
+                <th>Nombre d'employés</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @item.Id
+                    </td>
+
+                    <td class="service-name">
+                        @item.Name
+                    </td>
+
+                    <td>
+                        @item.Description
+                    </td>
+
+                    <td>
+                        @(item.Employees?.Count ?? 0)
+                    </td>
+
+                    <td>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="action-btn details">
+                            <i class="fa fa-eye"></i>
+                        </a>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="action-btn edit">
+                            <i class="fa fa-pen"></i>
+                        </a>
+
+                        <a href="#"
+                           onclick="openDeleteModal(@item.Id)"
+                           class="action-btn delete">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+<!-- ================= DELETE POPUP ================= -->
+
+<div class="modal-overlay" id="deleteModal">
+
+    <div class="delete-modal">
+
+        <div class="delete-icon">
+            <i class="fa fa-trash"></i>
+        </div>
+
+        <h3>
+            Supprimer ce service ?
+        </h3>
+
+        <p>
+            Cette action est irréversible.
+        </p>
+
+        <div class="modal-buttons">
+
+            <button onclick="closeDeleteModal()"
+                    class="btn-modal-cancel">
+                <i class="fa fa-xmark"></i>
+                Annuler
+            </button>
+
+            <form asp-action="Delete"
+                  method="post"
+                  style="margin:0;display:flex;">
+
+                <input type="hidden"
+                       id="deleteId"
+                       name="id" />
+
+                <button type="submit"
+                        class="btn-modal-delete">
+                    <i class="fa fa-trash"></i>
+                    Supprimer
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+    // ================= SEARCH =================
+
+    document
+    .getElementById("serviceSearch")
+    .addEventListener("keyup", function(){
+
+        let value = this.value.toLowerCase();
+
+        let rows = document.querySelectorAll("#serviceTable tbody tr");
+
+        rows.forEach(row => {
+
+            let serviceName = row.cells[1]
+            .innerText
+            .toLowerCase();
+
+            if(serviceName.includes(value))
+            {
+                row.style.display = "";
+            }
+            else
+            {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+
+
+    // ================= DELETE POPUP =================
+
+    function openDeleteModal(id)
+    {
+        document
+        .getElementById("deleteId")
+        .value = id;
+
+        document
+        .getElementById("deleteModal")
+        .style.display = "flex";
+    }
+
+
+    function closeDeleteModal()
+    {
+        document
+        .getElementById("deleteModal")
+        .style.display = "none";
+    }
+
+
+    // Close popup when clicking outside
+
+    window.onclick = function(event)
+    {
+        let modal = document.getElementById("deleteModal");
+
+        if(event.target == modal)
+        {
+            modal.style.display = "none";
+        }
+    }
+
+</script>
