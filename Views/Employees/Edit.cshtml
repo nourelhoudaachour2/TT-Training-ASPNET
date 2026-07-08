@@ -1,0 +1,665 @@
+﻿@model Training_tunisie_telecome.Models.Employee
+
+@{
+    ViewData["Title"] = "Modifier Employé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+    .breadcrumb {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+        .breadcrumb span {
+            color: #14297a;
+            font-weight: 600;
+        }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .header-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        background: #e8edff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .header-icon i {
+            color: #14297a;
+            font-size: 24px;
+        }
+
+    .header-text h3 {
+        color: #14297a;
+        margin: 0;
+    }
+
+    .header-text p {
+        color: #6b7280;
+        margin: 5px 0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            color: #14297a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+    .form-control {
+        width: 100%;
+        height: 45px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 15px;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #14297a;
+        }
+
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 13px;
+    }
+
+    .input-validation-error {
+        border: 2px solid #ef4444;
+    }
+
+
+    /* IMAGE */
+
+    .image-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e5e7eb;
+    }
+
+
+    .current-image {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+
+    .file-dropzone {
+        border: 2px dashed #c7d0e8;
+        border-radius: 12px;
+        background: #f7f8fd;
+        padding: 30px 20px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .file-dropzone:hover {
+            border-color: #14297a;
+            background: #f0f3ff;
+        }
+
+    .file-upload-input {
+        display: none;
+    }
+
+    .dropzone-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #e8edff;
+        color: #14297a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        margin-bottom: 12px;
+    }
+
+    .dropzone-link {
+        color: #14297a;
+        font-weight: 700;
+    }
+
+    .dropzone-hint {
+        color: #9ca3af;
+        font-size: 12px;
+    }
+
+    .dropzone-file-info {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+        .dropzone-file-info.active {
+            display: flex;
+        }
+
+    .dropzone-file-icon {
+        width: 40px;
+        height: 40px;
+        background: #14297a;
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dropzone-file-name {
+        color: #14297a;
+        font-weight: 600;
+    }
+
+    .dropzone-remove {
+        border: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fdeceb;
+        color: #d9362d;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .btn-save {
+        background: #14297a;
+        color: white;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-cancel {
+        background: #fdeceb;
+        color: #d9362d;
+        padding: 12px 35px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+</style>
+
+
+<div class="breadcrumb">
+    Accueil /
+    <span>Employés</span>
+    /
+    Modifier
+</div>
+
+
+<div class="form-card">
+
+    <div class="form-header">
+
+        <div class="header-icon">
+            <i class="fa fa-user-pen"></i>
+        </div>
+
+        <div class="header-text">
+            <h3>Informations employé</h3>
+            <p>Modifier les données de l'employé</p>
+        </div>
+
+    </div>
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+<input type="hidden" asp-for="Id" />
+
+<input type="hidden" asp-for="ImagePath" />
+
+
+<div class="form-body">
+
+
+<div asp-validation-summary="ModelOnly"></div>
+
+
+
+<div class="form-group">
+
+<label>
+    Image employé
+</label>
+
+
+@if(!string.IsNullOrEmpty(Model.ImagePath))
+{
+
+<div class="current-image">
+
+<img src="@Model.ImagePath"
+     class="image-preview" />
+
+</div>
+
+}
+
+
+
+<div class="file-dropzone"
+     id="fileDropzone"
+     onclick="document.getElementById('imageInput').click()">
+
+
+
+<input type="file"
+       id="imageInput"
+       name="image"
+       class="file-upload-input"
+       accept=".jpg,.jpeg,.png"
+       onchange="handleFileSelect(this)" />
+
+
+
+<div id="dropzoneDefault">
+
+<div class="dropzone-icon">
+
+<i class="fa fa-cloud-arrow-up"></i>
+
+</div>
+
+
+<div>
+
+Glissez-déposez une image ici ou
+
+<span class="dropzone-link">
+parcourez vos fichiers
+</span>
+
+</div>
+
+
+<div class="dropzone-hint">
+
+PNG, JPG jusqu'à 5 Mo
+
+</div>
+
+
+</div>
+
+
+
+
+<div id="dropzoneFileInfo"
+     class="dropzone-file-info">
+
+
+<div class="dropzone-file-icon">
+
+<i class="fa fa-image"></i>
+
+</div>
+
+
+<span id="dropzoneFileName"
+      class="dropzone-file-name">
+</span>
+
+
+<button type="button"
+        class="dropzone-remove"
+        onclick="removeFile(event)">
+
+<i class="fa fa-xmark"></i>
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Matricule *
+</label>
+
+<input asp-for="Matricule"
+       class="form-control"/>
+
+<span asp-validation-for="Matricule"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Nom *
+</label>
+
+<input asp-for="LastName"
+       class="form-control"/>
+
+<span asp-validation-for="LastName"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Prénom *
+</label>
+
+<input asp-for="FirstName"
+       class="form-control"/>
+
+<span asp-validation-for="FirstName"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Email *
+</label>
+
+<input asp-for="Email"
+       class="form-control"/>
+
+<span asp-validation-for="Email"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Téléphone *
+</label>
+
+<input asp-for="PhoneNumber"
+       class="form-control"/>
+
+<span asp-validation-for="PhoneNumber"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Grade *
+</label>
+
+
+<select asp-for="Grade"
+        asp-items="ViewBag.Grades"
+        class="form-control">
+
+
+<option value="">
+-- Choisir Grade --
+</option>
+
+
+</select>
+
+
+<span asp-validation-for="Grade"></span>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Résidence *
+</label>
+
+
+<select asp-for="Residence"
+        asp-items="ViewBag.Residences"
+        class="form-control">
+
+
+<option value="">
+-- Choisir Résidence --
+</option>
+
+
+</select>
+
+
+<span asp-validation-for="Residence"></span>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Service *
+</label>
+
+
+<select asp-for="ServiceId"
+        asp-items="ViewBag.Services"
+        class="form-control">
+
+
+<option value="">
+-- Choisir Service --
+</option>
+
+
+</select>
+
+
+<span asp-validation-for="ServiceId"></span>
+
+
+</div>
+            <div class="buttons">
+
+
+                <a asp-action="Index"
+                   class="btn-cancel">
+
+                    <i class="fa fa-xmark"></i>
+
+                    Annuler
+
+                </a>
+
+
+
+                <button type="submit"
+                        class="btn-save">
+
+                    <i class="fa fa-save"></i>
+
+                    Enregistrer
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </form>
+
+
+</div>
+
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+
+    <script>
+
+        const dropzone = document.getElementById("fileDropzone");
+        const fileInput = document.getElementById("imageInput");
+
+        const dropzoneDefault =
+        document.getElementById("dropzoneDefault");
+
+        const dropzoneFileInfo =
+        document.getElementById("dropzoneFileInfo");
+
+        const dropzoneFileName =
+        document.getElementById("dropzoneFileName");
+
+
+
+        function showFile(file)
+        {
+            dropzoneDefault.style.display="none";
+
+            dropzoneFileInfo.classList.add("active");
+
+            dropzoneFileName.textContent=file.name;
+
+        }
+
+
+
+        function handleFileSelect(input)
+        {
+
+            if(input.files.length > 0)
+            {
+                showFile(input.files[0]);
+            }
+
+        }
+
+
+
+
+        function removeFile(event)
+        {
+
+            event.stopPropagation();
+
+            fileInput.value="";
+
+            dropzoneDefault.style.display="block";
+
+            dropzoneFileInfo.classList.remove("active");
+
+        }
+
+
+
+
+
+        dropzone.addEventListener("dragover",function(e){
+
+            e.preventDefault();
+
+            dropzone.style.borderColor="#14297a";
+
+        });
+
+
+
+
+
+        dropzone.addEventListener("dragleave",function(){
+
+            dropzone.style.borderColor="#c7d0e8";
+
+        });
+
+
+
+
+
+        dropzone.addEventListener("drop",function(e){
+
+            e.preventDefault();
+
+
+            if(e.dataTransfer.files.length > 0)
+            {
+
+                fileInput.files=e.dataTransfer.files;
+
+                showFile(e.dataTransfer.files[0]);
+
+            }
+
+
+        });
+
+    </script>
+
+
+}

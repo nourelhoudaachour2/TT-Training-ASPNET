@@ -1,0 +1,489 @@
+﻿@model Training_tunisie_telecome.Models.Employee
+
+@{
+    ViewData["Title"] = "Détails Employé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+    .details-container {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 35px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+    .profile-image img,
+    .profile-image i {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+    }
+
+
+    .profile-image img {
+        object-fit: cover;
+    }
+
+
+    .profile-image i {
+        background: #e8edff;
+        color: #14297a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px;
+    }
+
+
+    .profile-info h2 {
+        color: #14297a;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+
+
+    .employee-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #e8edff;
+        color: #14297a;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+
+
+    .profile-description {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+
+
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 25px 0 18px;
+        color: #14297a;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+
+
+    .section-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: #e8edff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+
+
+
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 60px;
+    }
+
+
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 10px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+
+    .info-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #f3e8ff;
+        color: #9b59b6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 13px;
+    }
+
+
+
+    .info-value {
+        color: black;
+        font-weight: 400;
+        font-size: 13px;
+    }
+
+
+
+
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #374151;
+        padding: 10px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+
+
+        .btn-back:hover {
+            background: #f3f4f6;
+        }
+
+</style>
+
+
+
+<div class="details-container">
+
+
+
+    <div class="profile-header">
+
+
+
+        <div class="profile-image">
+
+
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+
+                <img src="@Model.ImagePath" />
+
+            }
+            else
+            {
+
+                <i class="fa fa-user"></i>
+
+            }
+
+
+        </div>
+
+
+
+
+
+        <div class="profile-info">
+
+
+            <h2>
+                @Model.FirstName @Model.LastName
+            </h2>
+
+
+            <div class="employee-badge">
+
+                <i class="fa fa-user"></i>
+
+                Employé
+
+            </div>
+
+
+
+            <div class="profile-description">
+
+                Employé du service
+                <strong>@Model.Service?.Name</strong>.
+
+                <br />
+
+                Membre de l'équipe.
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+    <div class="section-title">
+
+
+        <div class="section-icon">
+
+            <i class="fa fa-id-card"></i>
+
+        </div>
+
+
+        Informations personnelles
+
+
+    </div>
+
+
+
+
+
+
+
+    <div class="info-grid">
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-id-badge"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Matricule
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.Matricule
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-envelope"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Email
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.Email
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-phone"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Téléphone
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.PhoneNumber
+                </span>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-award"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Grade
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.Grade
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-house"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Résidence
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.Residence
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-building"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Service
+                    </span>
+
+                </div>
+
+
+                <span class="info-value">
+                    @Model.Service?.Name
+                </span>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+    <a asp-action="Index"
+       class="btn-back">
+
+        <i class="fa fa-arrow-left"></i>
+
+        Retour à la liste
+
+    </a>
+
+
+
+</div>

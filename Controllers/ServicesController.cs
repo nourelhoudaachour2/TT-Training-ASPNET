@@ -167,7 +167,31 @@ namespace Training_tunisie_telecome.Controllers
 
 
         }
+        // GET: Services/Details/5
+
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null)
+                return NotFound();
+
+
+            var service = await _context.Services
+                .Include(s => s.Employees)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+
+
+            if (service == null)
+                return NotFound();
+
+
+
+            return View(service);
+
+        }
 
 
     }
+
 }
