@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training_tunisie_telecome.Data;
 
@@ -11,9 +12,11 @@ using Training_tunisie_telecome.Data;
 namespace Training_tunisie_telecome.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260729161948_AddAttendance")]
+    partial class AddAttendance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,9 +84,6 @@ namespace Training_tunisie_telecome.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AuthenticationEnabled")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("DomainId")
                         .HasColumnType("int");
 
@@ -112,12 +112,6 @@ namespace Training_tunisie_telecome.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<bool>("MustChangePassword")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -310,9 +304,6 @@ namespace Training_tunisie_telecome.Migrations
                     b.Property<decimal>("HotelCost")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("HotelNightPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<decimal>("KitCost")
                         .HasColumnType("decimal(65,30)");
 
@@ -324,24 +315,12 @@ namespace Training_tunisie_telecome.Migrations
                     b.Property<decimal>("MealCost")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("NotebookPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<decimal>("OtherCost")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("PenPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("RestaurantTicketPrice")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<decimal>("ToteBagPrice")
-                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("TrainerCost")
                         .HasColumnType("decimal(65,30)");
@@ -381,9 +360,6 @@ namespace Training_tunisie_telecome.Migrations
 
                     b.Property<string>("JustificationFile")
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("JustificationUploadedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool?>("Present")
                         .HasColumnType("tinyint(1)");

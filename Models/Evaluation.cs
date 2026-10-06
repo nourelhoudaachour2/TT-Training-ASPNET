@@ -3,36 +3,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Training_tunisie_telecome.Models
 {
-    public class Attendance
+    public class Evaluation
     {
         public int Id { get; set; }
 
-
         [Required]
         public int SessionParticipantId { get; set; }
-
         public SessionParticipant? SessionParticipant { get; set; }
 
-
-
         [Required]
-        public DateTime Date { get; set; }
+        public string Type { get; set; } = string.Empty;
+        // "À chaud" = avant formation, "À froid" = après formation
 
+        public int? Rating { get; set; }
 
+        public string? Comment { get; set; }
 
-        [Required]
-        public string Status { get; set; } = "Absent";
-
-
-
-        public string? Note { get; set; }
-
-
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-
-
-        public string? CreatedBy { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
     }
 }

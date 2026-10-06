@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training_tunisie_telecome.Data;
 
@@ -11,9 +12,11 @@ using Training_tunisie_telecome.Data;
 namespace Training_tunisie_telecome.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260724165622_NomDeTaMigration")]
+    partial class NomDeTaMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,40 +24,6 @@ namespace Training_tunisie_telecome.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Training_tunisie_telecome.Models.Attendance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("SessionParticipantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SessionParticipantId");
-
-                    b.ToTable("Attendances");
-                });
 
             modelBuilder.Entity("Training_tunisie_telecome.Models.Domain", b =>
                 {
@@ -80,9 +49,6 @@ namespace Training_tunisie_telecome.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("AuthenticationEnabled")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("DomainId")
                         .HasColumnType("int");
@@ -112,12 +78,6 @@ namespace Training_tunisie_telecome.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<bool>("MustChangePassword")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -178,8 +138,7 @@ namespace Training_tunisie_telecome.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -193,16 +152,14 @@ namespace Training_tunisie_telecome.Migrations
 
                     b.Property<string>("Module")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Objectives")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -298,6 +255,9 @@ namespace Training_tunisie_telecome.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateEnd")
                         .HasColumnType("datetime(6)");
 
@@ -310,38 +270,22 @@ namespace Training_tunisie_telecome.Migrations
                     b.Property<decimal>("HotelCost")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("HotelNightPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<decimal>("KitCost")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("MealCost")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("NotebookPrice")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("OtherCost")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("PenPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("RestaurantTicketPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<decimal>("ToteBagPrice")
-                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("TrainerCost")
                         .HasColumnType("decimal(65,30)");
@@ -381,9 +325,6 @@ namespace Training_tunisie_telecome.Migrations
 
                     b.Property<string>("JustificationFile")
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("JustificationUploadedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool?>("Present")
                         .HasColumnType("tinyint(1)");
@@ -457,17 +398,6 @@ namespace Training_tunisie_telecome.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Trainers");
-                });
-
-            modelBuilder.Entity("Training_tunisie_telecome.Models.Attendance", b =>
-                {
-                    b.HasOne("Training_tunisie_telecome.Models.SessionParticipant", "SessionParticipant")
-                        .WithMany("Attendances")
-                        .HasForeignKey("SessionParticipantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SessionParticipant");
                 });
 
             modelBuilder.Entity("Training_tunisie_telecome.Models.Employee", b =>
@@ -589,11 +519,6 @@ namespace Training_tunisie_telecome.Migrations
             modelBuilder.Entity("Training_tunisie_telecome.Models.SessionFormation", b =>
                 {
                     b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("Training_tunisie_telecome.Models.SessionParticipant", b =>
-                {
-                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("Training_tunisie_telecome.Models.Trainer", b =>

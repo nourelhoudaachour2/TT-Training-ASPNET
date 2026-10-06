@@ -8,9 +8,8 @@ namespace Training_tunisie_telecome.Models
 
         [Required]
         [MaxLength(50)]
-        public string Matricule { get; set; }
+        public string Matricule { get; set; } = string.Empty;
 
-        [Required]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
     }
 }

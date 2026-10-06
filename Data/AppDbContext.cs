@@ -10,90 +10,172 @@ namespace Training_tunisie_telecome.Data
         {
         }
 
+
         // =======================
-        // 🟢 DBSets
+        // DBSets
         // =======================
 
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<Formation> Formations { get; set; }
+
         public DbSet<Trainer> Trainers { get; set; }
+
+        public DbSet<Formation> Formations { get; set; }
+
+        public DbSet<Domain> Domains { get; set; }
+
+        public DbSet<FormationDomain> FormationDomains { get; set; }
+
+        public DbSet<SessionFormation> SessionFormations { get; set; }
+
+        public DbSet<SessionParticipant> SessionParticipants { get; set; }
+
+        public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+
         public DbSet<Responsable> Responsables { get; set; }
 
+
         // =======================
-        // 🟢 MODEL CONFIGURATION
+        // MODEL CONFIGURATION
         // =======================
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+
+            // =======================
+            // Responsable
+            // =======================
+
             modelBuilder.Entity<Responsable>()
                 .HasIndex(r => r.Matricule)
                 .IsUnique();
+
+
+
             // =======================
-            // 👤 Employee
+            // Employee
             // =======================
 
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Matricule)
                 .IsUnique();
 
+
             modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Service)
-                .WithMany(s => s.Employees)
-                .HasForeignKey(e => e.ServiceId)
+                .HasOne(e => e.Domain)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DomainId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // =======================
-            // 🏢 Service
-            // =======================
 
-            modelBuilder.Entity<Service>()
-                .HasMany(s => s.Employees)
-                .WithOne(e => e.Service)
-                .HasForeignKey(e => e.ServiceId);
 
             // =======================
-            // 🎓 Formation
+            // Formation - Domain
+            // Many To Many
             // =======================
 
-            modelBuilder.Entity<Formation>()
-                .HasOne(f => f.Service)
-                .WithMany()
-                .HasForeignKey(f => f.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Formation>()
-                .HasOne(f => f.Trainer)
-                .WithMany(t => t.Formations)
-                .HasForeignKey(f => f.TrainerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // =======================
-            // 👨‍🏫 Trainer
-            // =======================
-
-            modelBuilder.Entity<Trainer>()
-                .HasMany(t => t.Formations)
-                .WithOne(f => f.Trainer)
-                .HasForeignKey(f => f.TrainerId);
-
-            // =======================
-            // 📋 Attendance
-            // =======================
-
-            modelBuilder.Entity<Attendance>()
-                .HasOne(a => a.Employee)
-                .WithMany()
-                .HasForeignKey(a => a.EmployeeId)
+            modelBuilder.Entity<FormationDomain>()
+                .HasOne(fd => fd.Formation)
+                .WithMany(f => f.FormationDomains)
+                .HasForeignKey(fd => fd.FormationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Attendance>()
-                .HasOne(a => a.Formation)
-                .WithMany(f => f.Attendances)
-                .HasForeignKey(a => a.FormationId)
+
+            modelBuilder.Entity<FormationDomain>()
+              
+    .HasOne(fd => fd.Domain)
+    .WithMany(d => d.FormationDomains)
+    .HasForeignKey(fd => fd.DomainId)
+    .OnDelete(DeleteBehavior.Cascade);
+                
+
+
+
+            // =======================
+            // Formation - Session
+            // =======================
+
+            modelBuilder.Entity<SessionFormation>()
+                .HasOne(s => s.Formation)
+                .WithMany(f => f.Sessions)
+                .HasForeignKey(s => s.FormationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // =======================
+            // Trainer - Session
+            // =======================
+
+            modelBuilder.Entity<SessionFormation>()
+                .HasOne(s => s.Trainer)
+                .WithMany(t => t.Sessions)
+                .HasForeignKey(s => s.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+            // =======================
+            // Employee - SessionParticipant
+            // =======================
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.Employee)
+                .WithMany(e => e.SessionParticipants)
+                .HasForeignKey(sp => sp.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // =======================
+            // Session - Participant
+            // =======================
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.SessionFormation)
+                .WithMany(s => s.Participants)
+                .HasForeignKey(sp => sp.SessionFormationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // =======================
+            // Remplaçant
+            // Employee self relation
+            // =======================
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.ReplacementEmployee)
+                .WithMany()
+                .HasForeignKey(sp => sp.ReplacementEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+            // =======================
+            // Evaluation
+            // =======================
+
+            modelBuilder.Entity<Evaluation>()
+                .HasOne(e => e.SessionParticipant)
+                .WithMany()
+                .HasForeignKey(e => e.SessionParticipantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // =======================
+            // Notification
+            // =======================
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Employee)
+                .WithMany()
+                .HasForeignKey(n => n.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
