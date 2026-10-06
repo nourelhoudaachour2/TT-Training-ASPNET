@@ -1,0 +1,617 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.Formation>
+
+@{
+    ViewData["Title"] = "Formations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var cardPalette = new[]
+    {
+        new { Bg = "#f3e8ff", Fg = "#7c3aed", Border = "#d8b4fe" }, // Violet (F-001)
+        new { Bg = "#e0f2fe", Fg = "#0284c7", Border = "#bae6fd" }, // Bleu (F-002)
+        new { Bg = "#fef3c7", Fg = "#d97706", Border = "#fde68a" }, // Ambre (F-003)
+        new { Bg = "#d1fae5", Fg = "#059669", Border = "#a7f3d0" }, // Vert (F-004)
+        new { Bg = "#ffedd5", Fg = "#ea580c", Border = "#fed7aa" }, // Orange (F-005)
+        new { Bg = "#fce7f3", Fg = "#db2777", Border = "#fbcfe8" }, // Rose (F-006)
+        new { Bg = "#e0f2fe", Fg = "#2563eb", Border = "#bfdbfe" }, // Bleu ciel (F-007)
+        new { Bg = "#f3e8ff", Fg = "#9333ea", Border = "#e9d5ff" }  // Violet foncé (F-008)
+    };
+
+    int cardIndex = 0;
+
+    Func<string, string> pickIcon = (text) =>
+    {
+        text = (text ?? "").ToLowerInvariant();
+        if (text.Contains("cyber") || text.Contains("sécurité") || text.Contains("securite")) return "fa-shield-halved";
+        if (text.Contains("excel") || text.Contains("bureautique")) return "fa-table-cells";
+        if (text.Contains("cloud")) return "fa-cloud";
+        if (text.Contains("communication")) return "fa-bullhorn";
+        if (text.Contains("leadership") || text.Contains("management")) return "fa-user-tie";
+        if (text.Contains("personnel") || text.Contains("confiance")) return "fa-heart-pulse";
+        if (text.Contains("réglement") || text.Contains("reglement") || text.Contains("juridique") || text.Contains("conformité") || text.Contains("conformite")) return "fa-book-open";
+        return "fa-graduation-cap";
+    };
+
+    var allDomains = Model
+        .SelectMany(f => f.FormationDomains)
+        .Select(fd => fd.Domain?.Name)
+        .Where(n => !string.IsNullOrEmpty(n))
+        .Distinct()
+        .OrderBy(n => n)
+        .ToList();
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    .formations-container {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,.03);
+    }
+
+        .formations-container i.fa-solid,
+        .formations-container i.fa-regular,
+        .formations-container i.fa {
+            font-family: "Font Awesome 6 Free", "FontAwesome" !important;
+            font-style: normal !important;
+            font-weight: 900 !important;
+            display: inline-block;
+        }
+
+    /* ================= BARRE DU HAUT ================= */
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 240px;
+        position: relative;
+    }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 44px;
+            padding-left: 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 13.5px;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+            .search-box input:focus {
+                outline: none;
+                border-color: #14297a;
+                background: #fff;
+            }
+
+    .filter-select {
+        height: 44px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0 16px;
+        color: #475569;
+        background: #f8fafc;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* BOUTON BLEU MARINE COMME LA CAPTURE */
+    .btn-add {
+        background: #14297a;
+        color: white;
+        padding: 11px 22px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(20, 41, 122, 0.3);
+        transition: all 0.2s ease;
+    }
+
+        .btn-add:hover {
+            background: #0f1e5a;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    /* ================= GRILLE DES CARTES ================= */
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+    }
+
+    @@media(max-width: 1300px) {
+        .cards-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media(max-width: 992px) {
+        .cards-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media(max-width: 640px) {
+        .cards-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ================= CARTE ================= */
+    .formation-card {
+        border-radius: 16px;
+        padding: 18px 20px;
+        background: #ffffff;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .formation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+    .card-header-flex {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .card-header-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-code {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+    .card-title {
+        color: #0f172a;
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .card-details-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .card-info {
+        color: #64748b;
+        font-size: 12.5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+    }
+
+        .card-info i {
+            width: 16px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .card-info.type-info {
+            color: #7c3aed;
+            font-weight: 600;
+        }
+
+            .card-info.type-info i {
+                color: #7c3aed;
+            }
+
+    .card-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+    }
+
+    .btn-pill-details {
+        flex: 1;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: #ffffff;
+        color: #7c3aed;
+        border: 1px solid #d8b4fe;
+        transition: all 0.2s ease;
+    }
+
+        .btn-pill-details:hover {
+            background: #f5f0ff;
+            border-color: #c084fc;
+            color: #6d28d9;
+        }
+
+    .btn-pill-edit {
+        flex: 1;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: #ffffff;
+        color: #16a34a;
+        border: 1px solid #86efac;
+        transition: all 0.2s ease;
+    }
+
+        .btn-pill-edit:hover {
+            background: #f0fdf4;
+            border-color: #4ade80;
+            color: #15803d;
+        }
+
+    .delete-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fef2f2;
+        color: #ef4444;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+    /* ================= DELETE MODAL ================= */
+
+    .delete-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,.45);
+        backdrop-filter: blur(3px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .delete-modal {
+        width: 360px;
+        background: white;
+        border-radius: 18px;
+        padding: 28px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,.18);
+    }
+
+
+    .delete-warning {
+        width: 55px;
+        height: 55px;
+        margin: auto;
+        border-radius: 50%;
+        background: #fee2e2;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+
+    .delete-modal h3 {
+        color: #14297a;
+        margin-top: 15px;
+        font-size: 18px;
+    }
+
+
+    .delete-modal p {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.6;
+        margin: 15px 0;
+    }
+
+
+    .delete-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+
+    .btn-delete-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+
+    .btn-delete-confirm {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
+
+<div class="formations-container">
+
+    <!-- ACTIONS HAUT -->
+    <div class="top-actions">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="formationSearch" placeholder="Rechercher une formation..." />
+        </div>
+
+        <select id="filterType" class="filter-select">
+            <option value="">Type : Tous</option>
+            <option value="interne">Interne</option>
+            <option value="externe">Externe</option>
+        </select>
+
+        <select id="filterDomain" class="filter-select">
+            <option value="">Domaine : Tous</option>
+            @foreach (var d in allDomains)
+            {
+                <option value="@d.ToLower()">@d</option>
+            }
+        </select>
+
+        <!-- BOUTON AJOUTER BLEU MARINE -->
+        <a asp-action="Create" class="btn-add">
+            <i class="fa-solid fa-plus"></i> Ajouter une formation
+        </a>
+    </div>
+
+    <!-- CARTES -->
+    <div class="cards-container" id="formationCards">
+
+        @foreach (var item in Model)
+        {
+            var palette = cardPalette[cardIndex % cardPalette.Length];
+            cardIndex++;
+
+            var session = item.Sessions.FirstOrDefault();
+            var domainNames = item.FormationDomains
+                .Select(fd => fd.Domain?.Name)
+                .Where(n => !string.IsNullOrEmpty(n))
+                .ToList();
+
+            <div class="formation-card"
+                 style="border: 1.5px solid @palette.Border;"
+                 data-type="@(session?.Type?.ToLower() ?? "")"
+                 data-domains="@string.Join(",", domainNames).ToLower()">
+
+                <!-- EN-TETE CÔTE À CÔTE -->
+                <div class="card-header-flex">
+                    <div class="card-icon" style="background:@palette.Bg; color:@palette.Fg;">
+                        <i class="fa-solid @pickIcon(item.Title + " " + item.Module)"></i>
+                    </div>
+                    <div class="card-header-text">
+                        <div class="card-code" style="color:@palette.Fg;">
+                            @item.Code
+                        </div>
+                        <div class="card-title" title="@item.Title">
+                            @item.Title
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INFORMATIONS -->
+                <div class="card-details-list">
+                    <div class="card-info">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>@(session?.DateStart.ToString("dd/MM/yyyy") ?? "27/07/2026")</span>
+                    </div>
+
+                    <div class="card-info type-info">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>@(session?.Type ?? "Interne")</span>
+                    </div>
+
+                    <div class="card-info">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>Domaines : @(domainNames.Any() ? string.Join(", ", domainNames) : "Gestion et finance")</span>
+                    </div>
+                </div>
+
+                <!-- BOUTONS D'ACTION -->
+                <div class="card-actions">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-pill-details">
+                        Détails
+                    </a>
+
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-pill-edit">
+                        Modifier
+                    </a>
+                    <button type="button"
+                            class="delete-btn"
+                            title="Supprimer"
+                            onclick="openDeleteModal('@item.Id','@item.Title')">
+
+                        <i class="fa-regular fa-trash-can"></i>
+
+                    </button>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+<div id="deleteModal" class="delete-overlay">
+
+
+    <div class="delete-modal">
+
+
+        <div class="delete-warning">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+
+        <h3>
+            Confirmer la suppression
+        </h3>
+
+
+        <p>
+
+            Êtes-vous sûr de vouloir supprimer :
+
+            <br>
+
+            <strong id="deleteName"></strong>
+
+            ?
+
+            <br>
+
+            Cette action est irréversible.
+
+        </p>
+
+
+
+        <div class="delete-actions">
+
+
+            <button type="button"
+                    class="btn-delete-cancel"
+                    onclick="closeDeleteModal()">
+
+                Annuler
+
+            </button>
+
+
+
+            <form id="deleteForm" method="post">
+
+                <button type="submit"
+                        class="btn-delete-confirm">
+
+                    Supprimer
+
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script>
+    function applyFormationFilters() {
+        let search = document.getElementById("formationSearch").value.toLowerCase();
+        let type = document.getElementById("filterType").value;
+        let domain = document.getElementById("filterDomain").value;
+
+        document.querySelectorAll(".formation-card").forEach(card => {
+            let text = card.innerText.toLowerCase();
+            let matchesSearch = text.includes(search);
+            let matchesType = !type || card.dataset.type === type;
+            let matchesDomain = !domain || card.dataset.domains.split(",").map(x => x.trim()).includes(domain);
+
+            card.style.display = (matchesSearch && matchesType && matchesDomain) ? "" : "none";
+        });
+    }
+
+    document.getElementById("formationSearch").addEventListener("keyup", applyFormationFilters);
+    document.getElementById("filterType").addEventListener("change", applyFormationFilters);
+    document.getElementById("filterDomain").addEventListener("change", applyFormationFilters);
+    function openDeleteModal(id, title) {
+
+        document.getElementById("deleteName").innerText = title;
+
+
+        document.getElementById("deleteForm").action =
+            "/Formations/Delete/" + id;
+
+
+        document.getElementById("deleteModal").style.display = "flex";
+
+    }
+
+
+
+    function closeDeleteModal() {
+
+        document.getElementById("deleteModal").style.display = "none";
+
+    }
+</script>

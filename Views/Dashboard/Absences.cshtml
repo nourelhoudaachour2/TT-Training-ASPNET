@@ -1,0 +1,367 @@
+﻿@model Training_tunisie_telecome.Models.ViewModels.ResponsableAbsencesPageViewModel
+
+@{
+    ViewData["Title"] = "Gestion des absences";
+}
+
+<style>
+    :root {
+        --tt-navy: #14297a;
+        --tt-navy-light: #eef1fb;
+        --tt-pink: #e6007e;
+        --tt-purple: #7b2cbf;
+        --tt-bg: #f4f3f9;
+        --tt-surface: #ffffff;
+        --tt-text: #1f2438;
+        --tt-text-muted: #7a7f97;
+        --tt-danger: #e0284f;
+        --tt-danger-bg: #fdeaee;
+        --tt-success: #17a06c;
+        --tt-success-bg: #e7f8f1;
+        --tt-warning: #d99000;
+        --tt-warning-bg: #fff6df;
+        --tt-radius: 16px;
+        --tt-radius-sm: 10px;
+        --tt-shadow: 0 8px 24px rgba(20,41,122,.06);
+    }
+
+    .tt-page-head {
+        margin-bottom: 26px;
+    }
+
+        .tt-page-head h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            color: var(--tt-text);
+        }
+
+        .tt-page-head .tt-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--tt-danger-bg);
+            color: var(--tt-danger);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        .tt-page-head p {
+            margin-top: 4px;
+            color: var(--tt-text-muted);
+            font-size: 14px;
+        }
+
+    .tt-empty {
+        background: var(--tt-surface);
+        border-radius: var(--tt-radius);
+        box-shadow: var(--tt-shadow);
+        text-align: center;
+        padding: 64px 24px;
+    }
+
+        .tt-empty i {
+            font-size: 40px;
+            color: #c7cae0;
+            margin-bottom: 16px;
+        }
+
+        .tt-empty h5 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--tt-text);
+            margin-bottom: 6px;
+        }
+
+        .tt-empty p {
+            color: var(--tt-text-muted);
+            font-size: 13.5px;
+        }
+
+    .tt-req-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 18px;
+    }
+
+    .tt-req-card {
+        background: var(--tt-surface);
+        border-radius: var(--tt-radius);
+        box-shadow: var(--tt-shadow);
+        padding: 22px;
+    }
+
+    .tt-req-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .tt-req-who {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .tt-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--tt-navy-light);
+        color: var(--tt-navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .tt-req-name {
+        font-size: 15.5px;
+        font-weight: 700;
+        color: var(--tt-text);
+    }
+
+    .tt-req-matricule {
+        color: var(--tt-text-muted);
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    .tt-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 13px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .tt-pill-warning {
+        background: var(--tt-warning-bg);
+        color: var(--tt-warning);
+    }
+
+    .tt-req-info {
+        background: var(--tt-bg);
+        border-radius: var(--tt-radius-sm);
+        padding: 16px;
+        margin-bottom: 18px;
+        font-size: 13.5px;
+        color: #4a4f66;
+    }
+
+        .tt-req-info div + div {
+            margin-top: 10px;
+        }
+
+        .tt-req-info i {
+            width: 18px;
+            margin-right: 6px;
+        }
+
+    .tt-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        border-radius: 999px;
+        padding: 10px 20px;
+        font-size: 13.5px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: .18s ease;
+        text-decoration: none;
+    }
+
+    .tt-btn-outline-danger {
+        background: var(--tt-danger-bg);
+        color: var(--tt-danger);
+        margin-bottom: 16px;
+    }
+
+        .tt-btn-outline-danger:hover {
+            background: var(--tt-danger);
+            color: #fff;
+        }
+
+    .tt-req-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .tt-btn-success {
+        background: var(--tt-success);
+        color: #fff;
+    }
+
+        .tt-btn-success:hover {
+            background: #128257;
+        }
+
+    .tt-btn-reject {
+        background: #f1f1f6;
+        color: var(--tt-danger);
+    }
+
+        .tt-btn-reject:hover {
+            background: var(--tt-danger);
+            color: #fff;
+        }
+</style>
+
+<div class="tt-page-head">
+    <h2>
+        <span class="tt-icon-badge"><i class="fa-solid fa-file-circle-exclamation"></i></span>
+        Justificatifs d'absence
+    </h2>
+    <p>Validation des justificatifs envoyés par les employés.</p>
+</div>
+
+
+@if (Model.Pending == null || !Model.Pending.Any())
+{
+    <div class="tt-empty">
+
+        <i class="fa-solid fa-folder-open"></i>
+
+        <h5>
+            Aucun justificatif en attente
+        </h5>
+
+        <p>
+            Toutes les demandes ont été traitées.
+        </p>
+
+    </div>
+}
+else
+{
+
+    <div class="tt-req-grid">
+
+        @foreach (var item in Model.Pending)
+        {
+            var initials = string.Join("", (item.EmployeeName ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                                                      .Where(p => p.Length > 0)
+                                                                      .Select(p => char.ToUpper(p[0])));
+
+            <div class="tt-req-card">
+
+                <div class="tt-req-top">
+
+                    <div class="tt-req-who">
+
+                        <div class="tt-avatar">@initials</div>
+
+                        <div>
+                            <div class="tt-req-name">
+                                @item.EmployeeName
+                            </div>
+
+                            <div class="tt-req-matricule">
+                                Matricule : @item.Matricule
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <span class="tt-pill tt-pill-warning">
+                        <i class="fa-solid fa-clock"></i>
+                        @item.AbsenceStatus
+                    </span>
+
+                </div>
+
+
+
+                <div class="tt-req-info">
+
+                    <div>
+                        <i class="fa-solid fa-graduation-cap" style="color:var(--tt-navy);"></i>
+                        <strong>Formation :</strong>
+                        @item.FormationTitle
+                    </div>
+
+
+                    <div>
+                        <i class="fa-solid fa-calendar" style="color:var(--tt-danger);"></i>
+                        <strong>Date absence :</strong>
+                        @item.Date.ToString("dd/MM/yyyy")
+                    </div>
+
+                </div>
+
+
+
+                @if (!string.IsNullOrEmpty(item.JustificationFile))
+                {
+                    <a href="@item.JustificationFile"
+                       target="_blank"
+                       class="tt-btn tt-btn-outline-danger">
+
+                        <i class="fa-solid fa-file-pdf"></i>
+                        Voir le justificatif PDF
+
+                    </a>
+                }
+
+
+
+                <div class="tt-req-actions">
+
+                    <form asp-controller="Dashboard"
+                          asp-action="AcceptAbsence"
+                          method="post">
+
+                        <input type="hidden"
+                               name="participantId"
+                               value="@item.ParticipantId" />
+
+                        <button type="submit" class="tt-btn tt-btn-success">
+
+                            <i class="fa-solid fa-check"></i>
+                            Accepter
+
+                        </button>
+
+                    </form>
+
+
+
+                    <form asp-controller="Dashboard"
+                          asp-action="RejectAbsence"
+                          method="post">
+
+                        <input type="hidden"
+                               name="participantId"
+                               value="@item.ParticipantId" />
+
+                        <button type="submit" class="tt-btn tt-btn-reject">
+
+                            <i class="fa-solid fa-xmark"></i>
+                            Refuser
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+            </div>
+
+        }
+
+    </div>
+}

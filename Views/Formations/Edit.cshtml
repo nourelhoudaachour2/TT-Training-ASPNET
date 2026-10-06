@@ -1,0 +1,469 @@
+﻿@model Training_tunisie_telecome.Models.Formation
+
+@{
+    ViewData["Title"] = "Modifier Formation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+
+    .breadcrumb {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+
+        .breadcrumb span {
+            color: #14297a;
+            font-weight: 600;
+        }
+
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 25px;
+    }
+
+
+    .header-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        background: #e8edff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+        .header-icon i {
+            color: #14297a;
+            font-size: 24px;
+        }
+
+
+    .header-text h3 {
+        color: #14297a;
+        margin: 0;
+    }
+
+
+    .header-text p {
+        color: #6b7280;
+        margin: 5px 0;
+    }
+
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+
+        .form-group label {
+            display: block;
+            color: #14297a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+
+    .form-control {
+        width: 100%;
+        height: 45px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 15px;
+    }
+
+
+    textarea.form-control {
+        height: 100px;
+        padding: 12px 15px;
+    }
+
+
+
+    .form-control:focus {
+        outline: none;
+        border-color: #14297a;
+    }
+
+
+
+    select.form-control {
+        background: #f3e8ff;
+    }
+
+
+
+    .domain-box {
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+
+
+    .domain-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+
+
+        .domain-item input {
+            accent-color: #7b2cbf;
+        }
+
+
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+
+
+    .btn-save {
+        background: #14297a;
+        color: white;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+
+
+    .btn-cancel {
+        background: #fdeceb;
+        color: #d9362d;
+        padding: 12px 35px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+</style>
+
+
+
+
+
+<div class="breadcrumb">
+
+    Accueil /
+
+    <span>Formations</span>
+
+    /
+
+    Modifier
+
+</div>
+
+
+
+
+
+
+<div class="form-card">
+
+
+
+    <div class="form-header">
+
+
+        <div class="header-icon">
+
+            <i class="fa fa-graduation-cap"></i>
+
+        </div>
+
+
+
+        <div class="header-text">
+
+
+            <h3>
+                Modifier formation
+            </h3>
+
+
+            <p>
+                Modifier les informations de la formation
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+    <form asp-action="Edit"
+          method="post">
+
+
+
+        <input type="hidden"
+               asp-for="Id" />
+
+
+
+        <div asp-validation-summary="ModelOnly"></div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Code formation *
+            </label>
+
+
+            <input asp-for="Code"
+                   class="form-control" />
+
+
+            <span asp-validation-for="Code"></span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Titre *
+            </label>
+
+
+            <input asp-for="Title"
+                   class="form-control" />
+
+
+            <span asp-validation-for="Title"></span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Module *
+            </label>
+
+
+            <input asp-for="Module"
+                   class="form-control" />
+
+
+            <span asp-validation-for="Module"></span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+
+            <textarea asp-for="Description"
+                      class="form-control"></textarea>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Durée (jours) *
+            </label>
+
+
+            <input asp-for="Duration"
+                   type="number"
+                   class="form-control" />
+
+
+            <span asp-validation-for="Duration"></span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Objectifs
+            </label>
+
+
+            <textarea asp-for="Objectives"
+                      class="form-control"></textarea>
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="form-group">
+
+            <label>
+                Population cible *
+            </label>
+
+
+            <div class="domain-box">
+
+
+                @foreach (var domain in ViewBag.Domains)
+                {
+
+
+                    var selected =
+                    Model.FormationDomains
+                    .Any(fd => fd.DomainId == int.Parse(domain.Value));
+
+
+                    <div class="domain-item">
+
+
+                        <input type="checkbox"
+                               name="selectedDomains"
+                               value="@domain.Value"
+                        @(selected ? "checked" : "") />
+
+
+
+                        <label>
+                            @domain.Text
+                        </label>
+
+
+
+                    </div>
+
+
+                }
+
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="buttons">
+
+
+            <a asp-action="Index"
+               class="btn-cancel">
+
+                Annuler
+
+            </a>
+
+
+
+
+            <button type="submit"
+                    class="btn-save">
+
+                <i class="fa fa-save"></i>
+
+                Enregistrer
+
+            </button>
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </form>
+
+
+</div>
+
+
+
+
+
+@section Scripts {
+
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+}

@@ -1,0 +1,630 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.ViewModels.BudgetReportViewModel>
+
+@{
+    ViewData["Title"] = "Rapport Budget";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var genereLe = DateTime.Now.ToString("dd MMM yyyy 'à' HH:mm");
+    var budgetTotal = Model.Sum(m => m.Total);
+}
+
+<!-- Bootstrap Icons (si déjà inclus dans _Layout.cshtml, cette ligne peut être supprimée) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+    .rapport-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .rapport-header h2 {
+            font-weight: 700;
+            color: var(--tt-navy, #1b2b52);
+            margin-bottom: 4px;
+        }
+
+        .rapport-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    .rapport-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-rapport {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .15s ease;
+    }
+
+        .btn-rapport i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .btn-rapport:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn-rapport.pdf {
+            color: #b91c1c;
+        }
+
+        .btn-rapport.excel {
+            color: #15803d;
+        }
+
+    .rapport-meta {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        background: #eef1fb;
+        color: var(--tt-mauve, #6c4a8e);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+        .meta-chip i {
+            font-size: 0.9rem;
+        }
+
+        .meta-chip.total-chip {
+            background: #eef7f0;
+            color: #15803d;
+            font-weight: 700;
+        }
+
+    .rapport-toolbar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+    }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+    .toolbar-select {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        font-size: 0.9rem;
+        background: #fff;
+        color: #374151;
+        min-width: 180px;
+    }
+
+    .rapport-table-card {
+        background: #fff;
+        border: 1px solid #eef0f4;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table.rapport-table {
+        width: 100%;
+        min-width: 1050px;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+        table.rapport-table thead th {
+            background: #fafbfc;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eef0f4;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+            table.rapport-table thead th .sort-arrow {
+                opacity: 0.35;
+                font-size: 0.75rem;
+                margin-left: 4px;
+            }
+
+            table.rapport-table thead th.text-right,
+            table.rapport-table tbody td.text-right {
+                text-align: right;
+            }
+
+            table.rapport-table thead th.text-center,
+            table.rapport-table tbody td.text-center {
+                text-align: center;
+            }
+
+        table.rapport-table tbody td {
+            padding: 14px 16px;
+            font-size: 0.9rem;
+            color: #1f2937;
+            border-bottom: 1px solid #f4f5f7;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+            table.rapport-table tbody td:nth-child(1) {
+                white-space: normal;
+                min-width: 170px;
+                font-weight: 500;
+            }
+
+        table.rapport-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.rapport-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        table.rapport-table td.icon-cell i {
+            margin-right: 4px;
+        }
+
+        /* Couleurs légères pour les icônes du tableau */
+        table.rapport-table tbody td:nth-child(2) i {
+            color: #6366f1;
+        }
+
+        table.rapport-table tbody td:nth-child(3) i {
+            color: #8b5cf6;
+        }
+
+        table.rapport-table tbody td:nth-child(4) i {
+            color: #0ea5e9;
+        }
+
+        table.rapport-table tbody td:nth-child(5) i {
+            color: #f59e0b;
+        }
+
+        table.rapport-table tbody td:nth-child(6) i {
+            color: #ec4899;
+        }
+
+        table.rapport-table tbody td:nth-child(7) i {
+            color: #8b5cf6;
+        }
+
+        table.rapport-table tbody td:nth-child(8) i {
+            color: #64748b;
+        }
+
+        table.rapport-table tbody td:nth-child(9) i {
+            color: #16a34a;
+        }
+
+        table.rapport-table td.total-cell {
+            font-weight: 700;
+            color: var(--tt-navy, #1b2b52);
+        }
+
+    .badge-type {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 500;
+    }
+
+        .badge-type.type-presentiel {
+            background: #e6edfb;
+            color: #2451c9;
+        }
+
+        .badge-type.type-distanciel {
+            background: #e3f7ec;
+            color: #16965a;
+        }
+
+        .badge-type.type-hybride {
+            background: #f3e8fa;
+            color: var(--tt-mauve, #8c3fae);
+        }
+
+        .badge-type.type-default {
+            background: #eef0f4;
+            color: #4b5563;
+        }
+
+    .rapport-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        border-top: 1px solid #eef0f4;
+        font-size: 0.85rem;
+        color: #6b7280;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .pagination-controls button {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .pagination-controls button.active {
+                background: var(--tt-navy, #1b2b52);
+                color: #fff;
+                border-color: var(--tt-navy, #1b2b52);
+            }
+
+    .rapport-info {
+        margin-top: 14px;
+        padding: 12px 16px;
+        background: #f4f7fd;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #4b5563;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .rapport-info i {
+            color: var(--tt-mauve, #6c4a8e);
+        }
+
+    .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+        .no-results i {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+</style>
+
+<div class="rapport-header">
+    <div>
+        <h2>Rapport Budget Formation</h2>
+        <p>Répartition détaillée des coûts par session de formation</p>
+    </div>
+    <div class="rapport-actions">
+        <button type="button" class="btn-rapport pdf" id="btnExportPdf"><i class="bi bi-file-earmark-pdf"></i> Exporter PDF</button>
+        <button type="button" class="btn-rapport excel" id="btnExportExcel"><i class="bi bi-file-earmark-excel"></i> Exporter Excel</button>
+        <button type="button" class="btn-rapport" onclick="window.print()"><i class="bi bi-printer"></i> Imprimer</button>
+    </div>
+</div>
+
+<div class="rapport-meta">
+    <span class="meta-chip"><i class="bi bi-gear"></i> Généré automatiquement</span>
+    <span class="meta-chip"><i class="bi bi-calendar3"></i> @genereLe</span>
+    <span class="meta-chip" id="lignesChip"><i class="bi bi-list-ul"></i> @Model.Count() lignes</span>
+    <span class="meta-chip total-chip"><i class="bi bi-cash-stack"></i> Budget total : @budgetTotal.ToString("N3") DT</span>
+</div>
+
+<div class="rapport-toolbar">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" id="rapportSearch" placeholder="Rechercher une formation, un formateur, un lieu..." />
+    </div>
+    <select class="toolbar-select" id="sortSelect">
+        <option value="date-desc">Trier par : Date (récent → ancien)</option>
+        <option value="formation-asc">Trier par : Formation (A → Z)</option>
+        <option value="total-desc">Trier par : Total (décroissant)</option>
+        <option value="total-asc">Trier par : Total (croissant)</option>
+        <option value="participants-desc">Trier par : Participants (décroissant)</option>
+    </select>
+</div>
+
+<div class="rapport-table-card">
+    <div class="table-scroll">
+        <table class="rapport-table" id="rapportTable">
+            <thead>
+                <tr>
+                    <th data-key="formation">Formation <span class="sort-arrow">⇅</span></th>
+                    <th data-key="date">Dates <span class="sort-arrow">⇅</span></th>
+                    <th data-key="participants" class="text-center">Participants <span class="sort-arrow">⇅</span></th>
+                    <th data-key="formateurcost" class="text-right">Coût formateur <span class="sort-arrow">⇅</span></th>
+                    <th data-key="hotel" class="text-right">Coût hôtel <span class="sort-arrow">⇅</span></th>
+                    <th data-key="repas" class="text-right">Coût repas <span class="sort-arrow">⇅</span></th>
+                    <th data-key="kit" class="text-right">Coût kit <span class="sort-arrow">⇅</span></th>
+                    <th data-key="autres" class="text-right">Autres coûts <span class="sort-arrow">⇅</span></th>
+                    <th data-key="total" class="text-right">Total <span class="sort-arrow">⇅</span></th>
+                </tr>
+            </thead>
+            <tbody id="rapportBody">
+                @foreach (var b in Model)
+                {
+                    var dateAffiche = $"{b.DateStart:dd/MM/yyyy} → {b.DateEnd:dd/MM/yyyy}";
+
+                    <tr class="rapport-row"
+                        data-formation="@b.Formation"
+                        data-date="@b.DateStart.ToString("yyyy-MM-dd")"
+                        data-participants="@b.ParticipantCount"
+                        data-formateurcost="@b.TrainerCost"
+                        data-hotel="@b.HotelCost"
+                        data-repas="@b.MealCost"
+                        data-kit="@b.KitCost"
+                        data-autres="@b.OtherCost"
+                        data-total="@b.Total">
+                        <td>@b.Formation</td>
+                        <td class="icon-cell"><i class="bi bi-calendar3"></i>@dateAffiche</td>
+                        <td class="text-center icon-cell"><i class="bi bi-people"></i>@b.ParticipantCount</td>
+                        <td class="text-right icon-cell"><i class="bi bi-person-badge"></i>@b.TrainerCost.ToString("N3") DT</td>
+                        <td class="text-right icon-cell"><i class="bi bi-building"></i>@b.HotelCost.ToString("N3") DT</td>
+                        <td class="text-right icon-cell"><i class="bi bi-cup-hot"></i>@b.MealCost.ToString("N3") DT</td>
+                        <td class="text-right icon-cell"><i class="bi bi-box-seam"></i>@b.KitCost.ToString("N3") DT</td>
+                        <td class="text-right icon-cell"><i class="bi bi-three-dots"></i>@b.OtherCost.ToString("N3") DT</td>
+                        <td class="text-right total-cell icon-cell"><i class="bi bi-cash-stack"></i>@b.Total.ToString("N3") DT</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="no-results" id="noResults" style="display:none;">
+        <i class="bi bi-inbox"></i>
+        Aucun résultat trouvé.
+    </div>
+
+    <div class="rapport-footer">
+        <span id="paginationInfo">Affichage de 1 à @Model.Count() sur @Model.Count() lignes</span>
+        <div class="pagination-controls" id="paginationControls"></div>
+        <div>
+            Lignes par page :
+            <select class="toolbar-select" id="pageSizeSelect" style="min-width:80px; padding:6px 10px;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="9999">Tout</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="rapport-info">
+    <i class="bi bi-info-circle"></i>
+    Ce rapport est généré automatiquement à partir des données disponibles dans le système.
+</div>
+
+@section Scripts {
+    <!-- Génération PDF (tableau réel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- Génération Excel réel (.xlsx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        (function() {
+            const searchInput = document.getElementById('rapportSearch');
+            const sortSelect = document.getElementById('sortSelect');
+            const pageSizeSelect = document.getElementById('pageSizeSelect');
+            const tbody = document.getElementById('rapportBody');
+            const noResults = document.getElementById('noResults');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
+            const lignesChip = document.getElementById('lignesChip');
+
+            let allRows = Array.from(tbody.querySelectorAll('tr.rapport-row'));
+            let currentPage = 1;
+
+            function getFiltered() {
+                const term = searchInput.value.trim().toLowerCase();
+                return allRows.filter(r => !term || r.textContent.toLowerCase().includes(term));
+            }
+
+            function getSorted(rows) {
+                const [key, dir] = sortSelect.value.split('-');
+                const dsKey = key === 'formation' ? 'formation'
+                    : key === 'date' ? 'date'
+                        : key === 'participants' ? 'participants'
+                            : key === 'total' ? 'total'
+                                : 'date';
+
+                const numeric = ['participants', 'total', 'formateurcost', 'hotel', 'repas', 'kit', 'autres'].includes(dsKey);
+                const isDate = dsKey === 'date';
+
+                const sorted = [...rows].sort((a, b) => {
+                    let va = a.dataset[dsKey];
+                    let vb = b.dataset[dsKey];
+                    if (numeric) {
+                        return (parseFloat(va) || 0) - (parseFloat(vb) || 0);
+                    }
+                    if (isDate) {
+                        return new Date(va) - new Date(vb);
+                    }
+                    return String(va).localeCompare(String(vb));
+                });
+                if (dir === 'desc') sorted.reverse();
+                return sorted;
+            }
+
+            // Extrait les données propres (sans HTML/icônes) pour les exports
+            function getRowsData(rows) {
+                return rows.map(r => ({
+                    formation: r.dataset.formation,
+                    date: r.dataset.date,
+                    participants: r.dataset.participants,
+                    formateurcost: parseFloat(r.dataset.formateurcost || 0).toFixed(3),
+                    hotel: parseFloat(r.dataset.hotel || 0).toFixed(3),
+                    repas: parseFloat(r.dataset.repas || 0).toFixed(3),
+                    kit: parseFloat(r.dataset.kit || 0).toFixed(3),
+                    autres: parseFloat(r.dataset.autres || 0).toFixed(3),
+                    total: parseFloat(r.dataset.total || 0).toFixed(3)
+                }));
+            }
+
+            function render() {
+                const filtered = getSorted(getFiltered());
+                const pageSize = parseInt(pageSizeSelect.value);
+                const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                allRows.forEach(r => r.style.display = 'none');
+
+                const start = (currentPage - 1) * pageSize;
+                const pageRows = filtered.slice(start, start + pageSize);
+                pageRows.forEach(r => { r.style.display = ''; tbody.appendChild(r); });
+
+                noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+                lignesChip.innerHTML = '<i class="bi bi-list-ul"></i> ' + filtered.length + ' lignes';
+
+                const from = filtered.length === 0 ? 0 : start + 1;
+                const to = Math.min(start + pageSize, filtered.length);
+                paginationInfo.textContent = `Affichage de ${from} à ${to} sur ${filtered.length} lignes`;
+
+                paginationControls.innerHTML = '';
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.onclick = () => { currentPage--; render(); };
+                paginationControls.appendChild(prevBtn);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = p;
+                    if (p === currentPage) btn.classList.add('active');
+                    btn.onclick = () => { currentPage = p; render(); };
+                    paginationControls.appendChild(btn);
+                }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.onclick = () => { currentPage++; render(); };
+                paginationControls.appendChild(nextBtn);
+            }
+
+            searchInput.addEventListener('input', () => { currentPage = 1; render(); });
+            sortSelect.addEventListener('change', () => { currentPage = 1; render(); });
+            pageSizeSelect.addEventListener('change', () => { currentPage = 1; render(); });
+
+            // ---- Export PDF réel (tableau, pas une capture d'écran) ----
+            document.getElementById('btnExportPdf').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+                doc.setFontSize(16);
+                doc.setTextColor(27, 43, 82); // navy
+                doc.text('Rapport Budget Formation', 40, 40);
+
+                doc.setFontSize(10);
+                doc.setTextColor(107, 114, 128);
+                doc.text('Généré le ' + '@genereLe', 40, 58);
+
+                const data = getRowsData(getSorted(getFiltered()));
+
+                doc.autoTable({
+                    startY: 75,
+                    head: [['Formation', 'Date', 'Participants', 'Coût form.', 'Hôtel', 'Repas', 'Kit', 'Autres', 'Total']],
+                    body: data.map(d => [
+                        d.formation, d.date, d.participants,
+                        d.formateurcost + ' DT', d.hotel + ' DT', d.repas + ' DT', d.kit + ' DT', d.autres + ' DT', d.total + ' DT'
+                    ]),
+                    styles: { fontSize: 9, cellPadding: 6 },
+                    headStyles: { fillColor: [27, 43, 82], textColor: 255, fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [249, 250, 251] },
+                    columnStyles: {
+                        2: { halign: 'center' },
+                        3: { halign: 'right' }, 4: { halign: 'right' }, 5: { halign: 'right' },
+                        6: { halign: 'right' }, 7: { halign: 'right' }, 8: { halign: 'right', fontStyle: 'bold' }
+                    },
+                    margin: { left: 40, right: 40 }
+                });
+
+                doc.save('rapport_budget.pdf');
+            });
+
+            // ---- Export Excel réel (.xlsx, pas un CSV) ----
+            document.getElementById('btnExportExcel').addEventListener('click', function() {
+                const data = getRowsData(getSorted(getFiltered()));
+
+                const wsData = [
+                    ['Formation', 'Date', 'Participants', 'Coût formateur (DT)', 'Coût hôtel (DT)', 'Coût repas (DT)', 'Coût kit (DT)', 'Autres coûts (DT)', 'Total (DT)'],
+                    ...data.map(d => [
+                        d.formation, d.date, d.participants,
+                        d.formateurcost, d.hotel, d.repas, d.kit, d.autres, d.total
+                    ])
+                ];
+
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                ws['!cols'] = [
+                    { wch: 28 }, { wch: 12 }, { wch: 12 },
+                    { wch: 15 }, { wch: 13 }, { wch: 13 }, { wch: 11 }, { wch: 13 }, { wch: 13 }
+                ];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Budget');
+
+                XLSX.writeFile(wb, 'rapport_budget.xlsx');
+            });
+
+            render();
+        })();
+    </script>
+}

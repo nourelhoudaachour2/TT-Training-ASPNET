@@ -1,0 +1,406 @@
+﻿@model Training_tunisie_telecome.Models.ViewModels.EmployeeNotificationsPageViewModel
+
+@{
+    Layout = "_EmployeeLayout";
+    ViewData["Title"] = "Notifications";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --tt-navy: #14297a;
+            --tt-navy-light: #eef1fb;
+            --tt-pink: #e6007e;
+            --tt-purple: #7b2cbf;
+            --tt-bg: #f4f3f9;
+            --tt-surface: #ffffff;
+            --tt-text: #1f2438;
+            --tt-text-muted: #7a7f97;
+            --tt-danger: #e0284f;
+            --tt-danger-bg: #fdeaee;
+            --tt-success: #17a06c;
+            --tt-success-bg: #e7f8f1;
+            --tt-warning: #d99000;
+            --tt-warning-bg: #fff6df;
+            --tt-radius: 16px;
+            --tt-radius-sm: 10px;
+            --tt-shadow: 0 8px 24px rgba(20,41,122,.06);
+        }
+
+        .tt-page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 26px;
+            flex-wrap: wrap;
+        }
+
+            .tt-page-head h2 {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 24px;
+                font-weight: 800;
+                letter-spacing: -.01em;
+                color: var(--tt-text);
+            }
+
+            .tt-page-head .tt-icon-badge {
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                background: var(--tt-warning-bg);
+                color: var(--tt-warning);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+            }
+
+            .tt-page-head p {
+                margin-top: 4px;
+                color: var(--tt-text-muted);
+                font-size: 14px;
+            }
+
+        .tt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 13.5px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .18s ease;
+            text-decoration: none;
+        }
+
+        .tt-btn-outline {
+            background: var(--tt-surface);
+            color: var(--tt-navy);
+            border: 1.5px solid var(--tt-navy-light);
+        }
+
+            .tt-btn-outline:hover {
+                background: var(--tt-navy-light);
+            }
+
+        .tt-btn-warning {
+            background: var(--tt-warning-bg);
+            color: var(--tt-warning);
+        }
+
+            .tt-btn-warning:hover {
+                background: var(--tt-warning);
+                color: #fff;
+            }
+
+        .tt-btn-danger {
+            background: var(--tt-danger);
+            color: #fff;
+        }
+
+            .tt-btn-danger:hover {
+                background: #c11f42;
+            }
+
+        .tt-empty {
+            background: var(--tt-surface);
+            border-radius: var(--tt-radius);
+            box-shadow: var(--tt-shadow);
+            text-align: center;
+            padding: 64px 24px;
+        }
+
+            .tt-empty i {
+                font-size: 40px;
+                color: #c7cae0;
+                margin-bottom: 16px;
+            }
+
+            .tt-empty h5 {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--tt-text);
+                margin-bottom: 6px;
+            }
+
+            .tt-empty p {
+                color: var(--tt-text-muted);
+                font-size: 13.5px;
+            }
+
+        .tt-notif-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 18px;
+        }
+
+        .tt-notif-card {
+            position: relative;
+            background: var(--tt-surface);
+            border-radius: var(--tt-radius);
+            box-shadow: var(--tt-shadow);
+            padding: 20px 20px 20px 24px;
+            overflow: hidden;
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+            .tt-notif-card::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: var(--tt-navy);
+            }
+
+            .tt-notif-card.type-absence::before {
+                background: var(--tt-danger);
+            }
+
+            .tt-notif-card.type-remplacement::before {
+                background: var(--tt-purple);
+            }
+
+            .tt-notif-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 30px rgba(20,41,122,.1);
+            }
+
+        .tt-notif-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .tt-notif-who {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tt-notif-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            background: var(--tt-navy-light);
+            color: var(--tt-navy);
+        }
+
+        .type-absence .tt-notif-icon {
+            background: var(--tt-danger-bg);
+            color: var(--tt-danger);
+        }
+
+        .type-remplacement .tt-notif-icon {
+            background: #f3ecfb;
+            color: var(--tt-purple);
+        }
+
+        .tt-notif-type {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--tt-text);
+        }
+
+        .tt-notif-time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--tt-text-muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .tt-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tt-pill-new {
+            background: var(--tt-danger-bg);
+            color: var(--tt-danger);
+        }
+
+        .tt-pill-read {
+            background: #f1f1f6;
+            color: var(--tt-text-muted);
+        }
+
+        .tt-pill-success {
+            background: var(--tt-success-bg);
+            color: var(--tt-success);
+        }
+
+        .tt-notif-msg {
+            margin-top: 16px;
+            background: var(--tt-bg);
+            border-radius: var(--tt-radius-sm);
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: #4a4f66;
+            line-height: 1.5;
+        }
+
+        .tt-notif-actions {
+            margin-top: 16px;
+        }
+    </style>
+}
+
+<div class="tt-page-head">
+    <div>
+        <h2>
+            <span class="tt-icon-badge"><i class="fa-solid fa-bell"></i></span>
+            Notifications
+        </h2>
+        <p>Retrouvez toutes vos alertes et informations.</p>
+    </div>
+
+    @if (Model.Notifications != null && Model.Notifications.Any())
+    {
+        <form asp-action="MarkAllNotificationsRead" method="post">
+            <button type="submit" class="tt-btn tt-btn-outline">
+                <i class="fa-solid fa-check-double"></i>
+                Marquer tout comme lu
+            </button>
+        </form>
+    }
+</div>
+
+
+@if (Model.Notifications == null || !Model.Notifications.Any())
+{
+    <div class="tt-empty">
+        <i class="fa-solid fa-bell-slash"></i>
+        <h5>Aucune notification</h5>
+        <p>Vous n'avez aucune nouvelle information.</p>
+    </div>
+}
+else
+{
+    <div class="tt-notif-grid">
+
+        @foreach (var item in Model.Notifications)
+        {
+            var typeClass = item.Type == "Absence" ? "type-absence" : (item.Type == "Remplacement" ? "type-remplacement" : "");
+
+            <div class="tt-notif-card @typeClass">
+
+                <div class="tt-notif-top">
+
+                    <div class="tt-notif-who">
+
+                        @if (item.Type == "Absence")
+                        {
+                            <div class="tt-notif-icon">
+                                <i class="fa-solid fa-file-circle-exclamation"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tt-notif-icon">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </div>
+                        }
+
+                        <div>
+                            <div class="tt-notif-type">@item.Type</div>
+                            <div class="tt-notif-time">
+                                <i class="fa-regular fa-clock"></i>
+                                @item.SentDate.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @if (item.Status == "Non lu")
+                    {
+                        <span class="tt-pill tt-pill-new">Nouveau</span>
+                    }
+                    else
+                    {
+                        <span class="tt-pill tt-pill-read">Lu</span>
+                    }
+
+                </div>
+
+
+                <div class="tt-notif-msg">
+                    @item.Message
+                </div>
+
+
+                @if (item.Type == "Absence")
+                {
+                    <div class="tt-notif-actions">
+
+                        @if (item.Message.Contains("a été accepté"))
+                        {
+                            <span class="tt-pill tt-pill-success" style="padding:8px 16px;">
+                                <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
+                                Justificatif accepté
+                            </span>
+                        }
+                        else if (item.Message.Contains("a été refusé"))
+                        {
+                            <a asp-controller="EmployeePortal"
+                               asp-action="Absences"
+                               class="tt-btn tt-btn-danger">
+
+                                <i class="fa-solid fa-upload"></i>
+                                Envoyer un nouveau justificatif
+
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="EmployeePortal"
+                               asp-action="Absences"
+                               class="tt-btn tt-btn-warning">
+
+                                <i class="fa-solid fa-upload"></i>
+                                Justifier mon absence
+
+                            </a>
+                        }
+
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(item.ActionUrl))
+                {
+                    <div class="tt-notif-actions">
+
+                        <a asp-controller="EmployeePortal"
+                           asp-action="Absences"
+                           class="tt-btn tt-btn-outline">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+                            Consulter
+
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+}

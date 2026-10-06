@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Training_tunisie_telecome.Views.Services
+namespace Training_tunisie_telecome.Views.EmployeePortal
 {
-    public class DetailsModel : PageModel
+    public class AbsencesModel : PageModel
     {
         public void OnGet()
         {

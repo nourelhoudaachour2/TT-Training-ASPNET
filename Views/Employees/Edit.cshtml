@@ -239,307 +239,282 @@
     </div>
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
 
-<input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" />
 
-<input type="hidden" asp-for="ImagePath" />
+        <input type="hidden" asp-for="ImagePath" />
 
 
-<div class="form-body">
+        <div class="form-body">
 
 
-<div asp-validation-summary="ModelOnly"></div>
+            <div asp-validation-summary="ModelOnly"></div>
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-    Image employé
-</label>
+                <label>
+                    Image employé
+                </label>
 
 
-@if(!string.IsNullOrEmpty(Model.ImagePath))
-{
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
 
-<div class="current-image">
+                    <div class="current-image">
 
-<img src="@Model.ImagePath"
-     class="image-preview" />
+                        <img src="@Model.ImagePath"
+                             class="image-preview" />
 
-</div>
+                    </div>
 
-}
+                }
 
 
 
-<div class="file-dropzone"
-     id="fileDropzone"
-     onclick="document.getElementById('imageInput').click()">
+                <div class="file-dropzone"
+                     id="fileDropzone"
+                     onclick="document.getElementById('imageInput').click()">
 
 
 
-<input type="file"
-       id="imageInput"
-       name="image"
-       class="file-upload-input"
-       accept=".jpg,.jpeg,.png"
-       onchange="handleFileSelect(this)" />
+                    <input type="file"
+                           id="imageInput"
+                           name="image"
+                           class="file-upload-input"
+                           accept=".jpg,.jpeg,.png"
+                           onchange="handleFileSelect(this)" />
 
 
 
-<div id="dropzoneDefault">
+                    <div id="dropzoneDefault">
 
-<div class="dropzone-icon">
+                        <div class="dropzone-icon">
 
-<i class="fa fa-cloud-arrow-up"></i>
+                            <i class="fa fa-cloud-arrow-up"></i>
 
-</div>
+                        </div>
 
 
-<div>
+                        <div>
 
-Glissez-déposez une image ici ou
+                            Glissez-déposez une image ici ou
 
-<span class="dropzone-link">
-parcourez vos fichiers
-</span>
+                            <span class="dropzone-link">
+                                parcourez vos fichiers
+                            </span>
 
-</div>
+                        </div>
 
 
-<div class="dropzone-hint">
+                        <div class="dropzone-hint">
 
-PNG, JPG jusqu'à 5 Mo
+                            PNG, JPG jusqu'à 5 Mo
 
-</div>
+                        </div>
 
 
-</div>
+                    </div>
 
 
 
 
-<div id="dropzoneFileInfo"
-     class="dropzone-file-info">
+                    <div id="dropzoneFileInfo"
+                         class="dropzone-file-info">
 
 
-<div class="dropzone-file-icon">
+                        <div class="dropzone-file-icon">
 
-<i class="fa fa-image"></i>
+                            <i class="fa fa-image"></i>
 
-</div>
+                        </div>
 
 
-<span id="dropzoneFileName"
-      class="dropzone-file-name">
-</span>
+                        <span id="dropzoneFileName"
+                              class="dropzone-file-name">
+                        </span>
 
 
-<button type="button"
-        class="dropzone-remove"
-        onclick="removeFile(event)">
+                        <button type="button"
+                                class="dropzone-remove"
+                                onclick="removeFile(event)">
 
-<i class="fa fa-xmark"></i>
+                            <i class="fa fa-xmark"></i>
 
-</button>
+                        </button>
 
 
-</div>
+                    </div>
 
 
-</div>
+                </div>
 
 
-</div>
+            </div>
 
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Matricule *
-</label>
+                <label>
+                    Matricule *
+                </label>
 
-<input asp-for="Matricule"
-       class="form-control"/>
+                <input asp-for="Matricule"
+                       class="form-control" />
 
-<span asp-validation-for="Matricule"></span>
+                <span asp-validation-for="Matricule"></span>
 
-</div>
+            </div>
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Nom *
-</label>
+                <label>
+                    Nom *
+                </label>
 
-<input asp-for="LastName"
-       class="form-control"/>
+                <input asp-for="LastName"
+                       class="form-control" />
 
-<span asp-validation-for="LastName"></span>
+                <span asp-validation-for="LastName"></span>
 
-</div>
+            </div>
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Prénom *
-</label>
+                <label>
+                    Prénom *
+                </label>
 
-<input asp-for="FirstName"
-       class="form-control"/>
+                <input asp-for="FirstName"
+                       class="form-control" />
 
-<span asp-validation-for="FirstName"></span>
+                <span asp-validation-for="FirstName"></span>
 
-</div>
+            </div>
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Email *
-</label>
+                <label>
+                    Email *
+                </label>
 
-<input asp-for="Email"
-       class="form-control"/>
+                <input asp-for="Email"
+                       class="form-control" />
 
-<span asp-validation-for="Email"></span>
+                <span asp-validation-for="Email"></span>
 
-</div>
+            </div>
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Téléphone *
-</label>
+                <label>
+                    Téléphone *
+                </label>
 
-<input asp-for="PhoneNumber"
-       class="form-control"/>
+                <input asp-for="PhoneNumber"
+                       class="form-control" />
 
-<span asp-validation-for="PhoneNumber"></span>
+                <span asp-validation-for="PhoneNumber"></span>
 
-</div>
+            </div>
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Grade *
-</label>
+                <label>
+                    Grade *
+                </label>
 
 
-<select asp-for="Grade"
-        asp-items="ViewBag.Grades"
-        class="form-control">
+                <select asp-for="Grade"
+                        asp-items="ViewBag.Grades"
+                        class="form-control">
 
 
-<option value="">
--- Choisir Grade --
-</option>
+                    <option value="">
+                        -- Choisir Grade --
+                    </option>
 
 
-</select>
+                </select>
 
 
-<span asp-validation-for="Grade"></span>
+                <span asp-validation-for="Grade"></span>
 
 
-</div>
+            </div>
 
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Résidence *
-</label>
+                <label>
+                    Résidence *
+                </label>
 
 
-<select asp-for="Residence"
-        asp-items="ViewBag.Residences"
-        class="form-control">
+                <select asp-for="Residence"
+                        asp-items="ViewBag.Residences"
+                        class="form-control">
 
 
-<option value="">
--- Choisir Résidence --
-</option>
+                    <option value="">
+                        -- Choisir Résidence --
+                    </option>
 
 
-</select>
+                </select>
 
 
-<span asp-validation-for="Residence"></span>
+                <span asp-validation-for="Residence"></span>
 
 
-</div>
+            </div>
 
 
 
 
 
-<div class="form-group">
+            <div class="form-group">
 
-<label>
-Service *
-</label>
+                <label>
+                    Domaine <span style="color:red">*</span>
+                </label>
 
 
-<select asp-for="ServiceId"
-        asp-items="ViewBag.Services"
-        class="form-control">
+                <select asp-for="DomainId"
+                        asp-items="ViewBag.Domains"
+                        class="form-control">
 
 
-<option value="">
--- Choisir Service --
-</option>
+                    <option value="">
+                        -- Choisir Domaine --
+                    </option>
 
 
-</select>
+                </select>
 
 
-<span asp-validation-for="ServiceId"></span>
-
-
-</div>
-            <div class="buttons">
-
-
-                <a asp-action="Index"
-                   class="btn-cancel">
-
-                    <i class="fa fa-xmark"></i>
-
-                    Annuler
-
-                </a>
-
-
-
-                <button type="submit"
-                        class="btn-save">
-
-                    <i class="fa fa-save"></i>
-
-                    Enregistrer
-
-                </button>
+                <span asp-validation-for="DomainId"></span>
 
 
             </div>
@@ -547,8 +522,17 @@ Service *
 
         </div>
 
-    </form>
 
+        <div class="buttons">
+
+            <a asp-action="Index" class="btn-cancel">Annuler</a>
+
+            <button type="submit" class="btn-save">Enregistrer</button>
+
+        </div>
+
+
+    </form>
 
 </div>
 
@@ -568,33 +552,30 @@ Service *
         const fileInput = document.getElementById("imageInput");
 
         const dropzoneDefault =
-        document.getElementById("dropzoneDefault");
+            document.getElementById("dropzoneDefault");
 
         const dropzoneFileInfo =
-        document.getElementById("dropzoneFileInfo");
+            document.getElementById("dropzoneFileInfo");
 
         const dropzoneFileName =
-        document.getElementById("dropzoneFileName");
+            document.getElementById("dropzoneFileName");
 
 
 
-        function showFile(file)
-        {
-            dropzoneDefault.style.display="none";
+        function showFile(file) {
+            dropzoneDefault.style.display = "none";
 
             dropzoneFileInfo.classList.add("active");
 
-            dropzoneFileName.textContent=file.name;
+            dropzoneFileName.textContent = file.name;
 
         }
 
 
 
-        function handleFileSelect(input)
-        {
+        function handleFileSelect(input) {
 
-            if(input.files.length > 0)
-            {
+            if (input.files.length > 0) {
                 showFile(input.files[0]);
             }
 
@@ -603,14 +584,13 @@ Service *
 
 
 
-        function removeFile(event)
-        {
+        function removeFile(event) {
 
             event.stopPropagation();
 
-            fileInput.value="";
+            fileInput.value = "";
 
-            dropzoneDefault.style.display="block";
+            dropzoneDefault.style.display = "block";
 
             dropzoneFileInfo.classList.remove("active");
 
@@ -620,11 +600,11 @@ Service *
 
 
 
-        dropzone.addEventListener("dragover",function(e){
+        dropzone.addEventListener("dragover", function(e) {
 
             e.preventDefault();
 
-            dropzone.style.borderColor="#14297a";
+            dropzone.style.borderColor = "#14297a";
 
         });
 
@@ -632,9 +612,9 @@ Service *
 
 
 
-        dropzone.addEventListener("dragleave",function(){
+        dropzone.addEventListener("dragleave", function() {
 
-            dropzone.style.borderColor="#c7d0e8";
+            dropzone.style.borderColor = "#c7d0e8";
 
         });
 
@@ -642,15 +622,14 @@ Service *
 
 
 
-        dropzone.addEventListener("drop",function(e){
+        dropzone.addEventListener("drop", function(e) {
 
             e.preventDefault();
 
 
-            if(e.dataTransfer.files.length > 0)
-            {
+            if (e.dataTransfer.files.length > 0) {
 
-                fileInput.files=e.dataTransfer.files;
+                fileInput.files = e.dataTransfer.files;
 
                 showFile(e.dataTransfer.files[0]);
 

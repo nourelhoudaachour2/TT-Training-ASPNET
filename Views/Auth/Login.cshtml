@@ -6,130 +6,116 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
-    <title>Connexion Responsable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connexion - Tunisie Telecom</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
+            * {
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
+
             body {
                 margin: 0;
-                font-family: 'Great Vibes', cursive;
-                height: 100vh;
+                min-height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: url('/images/login-bg.png') no-repeat center center;
-                background-size: cover;
-            }
-
-            .overlay {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.35);
+                background: #f7f7fb;
+                padding: 24px;
             }
 
             .card {
-                position: relative;
-                width: 420px;
-                background: white;
-                border-radius: 18px;
-                padding: 35px;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-                z-index: 2;
-                box-sizing: border-box;
+                width: 430px;
+                max-width: 100%;
+                background: #fff;
+                border-radius: 20px;
+                padding: 34px;
+                border: 1px solid #e8ebf2;
+                box-shadow: 0 14px 40px rgba(20,41,122,.10);
             }
 
             .logo {
                 display: flex;
                 justify-content: center;
-                margin-bottom: 15px;
+                margin-bottom: 16px;
             }
 
                 .logo img {
-                    width: 200px;
+                    width: 195px;
                 }
 
             .title {
                 text-align: center;
-                font-size: 18px;
-                font-weight: bold;
-                color: #1f3c88;
-                font-family: Arial;
+                font-size: 21px;
+                font-weight: 750;
+                color: #14297a;
+                margin-bottom: 7px;
             }
 
             .subtitle {
                 text-align: center;
-                font-size: 12px;
-                color: #6b7a99;
-                margin-bottom: 25px;
-                font-family: Arial;
+                font-size: 12.5px;
+                color: #718096;
+                margin-bottom: 26px;
             }
 
             .input-group {
-                margin-bottom: 18px;
-                width: 100%;
-                box-sizing: border-box;
+                margin-bottom: 17px;
             }
 
             label {
+                display: block;
                 font-size: 13px;
-                font-weight: bold;
+                font-weight: 650;
                 color: #2c3e70;
-                font-family: Arial;
+                margin-bottom: 7px;
             }
 
             .input {
                 position: relative;
-                margin-top: 6px;
-                width: 100%;
-                box-sizing: border-box;
             }
 
                 .input i {
                     position: absolute;
-                    left: 12px;
+                    left: 13px;
                     top: 50%;
                     transform: translateY(-50%);
                     color: #14297a;
                 }
 
-            input {
-                width: 100%;
-                box-sizing: border-box;
-                padding: 12px 12px 12px 38px;
-                border: 1px solid #d6dbe8;
-                border-radius: 10px;
-                outline: none;
-                font-family: Arial;
-            }
-
-                input:focus {
-                    border-color: #1f5eff;
+                .input input {
+                    width: 100%;
+                    height: 44px;
+                    padding: 0 14px 0 40px;
+                    border: 1px solid #dfe3ec;
+                    border-radius: 11px;
+                    outline: none;
+                    font-size: 13.5px;
+                    color: #334155;
+                    background: #fff;
                 }
 
-            .options {
-                display: flex;
-                justify-content: flex-end;
-                font-size: 12px;
-                margin-top: 10px;
-                color: #5a6b8a;
-                font-family: Arial;
-            }
+                    .input input:focus {
+                        border-color: #6d5ffb;
+                        box-shadow: 0 0 0 3px rgba(109,95,251,.08);
+                    }
 
             .btn {
                 width: 100%;
-                margin-top: 20px;
-                padding: 12px;
+                height: 44px;
+                margin-top: 7px;
                 border: none;
-                border-radius: 10px;
+                border-radius: 11px;
                 background: #14297a;
-                color: white;
-                font-weight: bold;
+                color: #fff;
+                font-size: 13.5px;
+                font-weight: 700;
                 cursor: pointer;
-                font-family: Arial;
-                box-sizing: border-box;
+                transition: .2s;
             }
 
                 .btn:hover {
@@ -137,56 +123,62 @@
                 }
 
             .error {
-                margin-top: 10px;
-                color: red;
-                font-size: 13px;
+                margin-top: 15px;
+                padding: 11px 13px;
+                color: #b91c1c;
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 10px;
+                font-size: 12.5px;
                 text-align: center;
-                font-family: Arial;
             }
 
             .footer {
-                margin-top: 15px;
+                margin-top: 18px;
+                padding-top: 16px;
+                border-top: 1px solid #f0f2f6;
                 text-align: center;
-                font-size: 11px;
-                color: #7b8db8;
-                font-family: Arial;
+                font-size: 11.5px;
+                color: #94a3b8;
             }
     </style>
 </head>
-
 <body>
-
-    <div class="overlay"></div>
 
     <div class="card">
 
         <div class="logo">
-            <img src="/images/tt-logo.png" />
+            <img src="/images/tt-logo.png" alt="Tunisie Telecom" />
         </div>
 
-        <div class="title">Connexion Responsable</div>
-        <div class="subtitle">Accès au système de gestion des formations</div>
+        <div class="title">Connexion</div>
+        <div class="subtitle">Plateforme de gestion des formations</div>
 
-        <form method="post">
+        <form asp-controller="Auth" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
 
             <div class="input-group">
-                <label>Matricule</label>
+                <label>Identifiant</label>
+
                 <div class="input">
-                    <i class="fa fa-user"></i>
-                    <input name="matricule" placeholder="Entrez votre matricule" />
+                    <i class="fa-solid fa-user"></i>
+                    <input name="identifiant"
+                           value="@ViewBag.Identifiant"
+                           autocomplete="username"
+                           placeholder="Matricule responsable ou email employé" />
                 </div>
             </div>
 
             <div class="input-group">
                 <label>Mot de passe</label>
-                <div class="input">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" name="password" placeholder="Entrez votre mot de passe" />
-                </div>
-            </div>
 
-            <div class="options">
-                <a href="#">Mot de passe oublié?</a>
+                <div class="input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password"
+                           name="password"
+                           autocomplete="current-password"
+                           placeholder="Entrez votre mot de passe" />
+                </div>
             </div>
 
             <button class="btn" type="submit">
@@ -197,11 +189,10 @@
             {
                 <div class="error">@ViewBag.Error</div>
             }
-
         </form>
 
         <div class="footer">
-            Accès réservé aux responsables
+            Accès Responsable RH / Employé
         </div>
 
     </div>

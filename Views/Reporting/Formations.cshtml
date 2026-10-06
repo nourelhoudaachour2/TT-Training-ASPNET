@@ -1,0 +1,566 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.Formation>
+
+@{
+    ViewData["Title"] = "Rapport Formations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var genereLe = DateTime.Now.ToString("dd MMM yyyy 'à' HH:mm");
+}
+
+<!-- Bootstrap Icons (si déjà inclus dans _Layout.cshtml, cette ligne peut être supprimée) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+    .rapport-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .rapport-header h2 {
+            font-weight: 700;
+            color: var(--tt-navy, #1b2b52);
+            margin-bottom: 4px;
+        }
+
+        .rapport-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    .rapport-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-rapport {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .15s ease;
+    }
+
+        .btn-rapport i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .btn-rapport:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn-rapport.pdf {
+            color: #b91c1c;
+        }
+
+        .btn-rapport.excel {
+            color: #15803d;
+        }
+
+    .rapport-meta {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        background: #eef1fb;
+        color: var(--tt-mauve, #6c4a8e);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+        .meta-chip i {
+            font-size: 0.9rem;
+        }
+
+    .rapport-toolbar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+    }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+    .toolbar-select {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        font-size: 0.9rem;
+        background: #fff;
+        color: #374151;
+        min-width: 170px;
+    }
+
+    .rapport-table-card {
+        background: #fff;
+        border: 1px solid #eef0f4;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    table.rapport-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+        table.rapport-table thead th {
+            background: #fafbfc;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #eef0f4;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+            table.rapport-table thead th .sort-arrow {
+                opacity: 0.35;
+                font-size: 0.75rem;
+                margin-left: 4px;
+            }
+
+        table.rapport-table tbody td {
+            padding: 14px 18px;
+            font-size: 0.9rem;
+            color: #1f2937;
+            border-bottom: 1px solid #f4f5f7;
+            vertical-align: middle;
+        }
+
+        table.rapport-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.rapport-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        table.rapport-table td.duree-cell i {
+            color: #9ca3af;
+            margin-right: 4px;
+        }
+
+    .badge-domaine {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        margin: 2px 4px 2px 0;
+    }
+
+        .badge-domaine.dom-it {
+            background: #e6edfb;
+            color: #2451c9;
+        }
+
+        .badge-domaine.dom-reseaux {
+            background: #e3f7ec;
+            color: #16965a;
+        }
+
+        .badge-domaine.dom-marketing {
+            background: #f3e8fa;
+            color: var(--tt-mauve, #8c3fae);
+        }
+
+        .badge-domaine.dom-finance {
+            background: #fdf1e0;
+            color: #b8720a;
+        }
+
+        .badge-domaine.dom-default {
+            background: #eef0f4;
+            color: #4b5563;
+        }
+
+    .rapport-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        border-top: 1px solid #eef0f4;
+        font-size: 0.85rem;
+        color: #6b7280;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .pagination-controls button {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .pagination-controls button.active {
+                background: var(--tt-navy, #1b2b52);
+                color: #fff;
+                border-color: var(--tt-navy, #1b2b52);
+            }
+
+    .rapport-info {
+        margin-top: 14px;
+        padding: 12px 16px;
+        background: #f4f7fd;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #4b5563;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .rapport-info i {
+            color: var(--tt-mauve, #6c4a8e);
+        }
+
+    .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+        .no-results i {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+</style>
+
+<div class="rapport-header">
+    <div>
+        <h2>Rapport Formations</h2>
+        <p>Analyse détaillée et génération automatique des rapports de formation</p>
+    </div>
+    <div class="rapport-actions">
+        <button type="button" class="btn-rapport pdf" id="btnExportPdf"><i class="bi bi-file-earmark-pdf"></i> Exporter PDF</button>
+        <button type="button" class="btn-rapport excel" id="btnExportExcel"><i class="bi bi-file-earmark-excel"></i> Exporter Excel</button>
+        <button type="button" class="btn-rapport" onclick="window.print()"><i class="bi bi-printer"></i> Imprimer</button>
+    </div>
+</div>
+
+<div class="rapport-meta">
+    <span class="meta-chip"><i class="bi bi-gear"></i> Généré automatiquement</span>
+    <span class="meta-chip"><i class="bi bi-calendar3"></i> @genereLe</span>
+    <span class="meta-chip" id="lignesChip"><i class="bi bi-list-ul"></i> @Model.Count() lignes</span>
+</div>
+
+<div class="rapport-toolbar">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" id="rapportSearch" placeholder="Rechercher dans le rapport..." />
+    </div>
+    <select class="toolbar-select" id="sortSelect">
+        <option value="code-asc">Trier par : Code (A → Z)</option>
+        <option value="code-desc">Trier par : Code (Z → A)</option>
+        <option value="titre-asc">Trier par : Titre (A → Z)</option>
+        <option value="duree-asc">Trier par : Durée (croissant)</option>
+        <option value="duree-desc">Trier par : Durée (décroissant)</option>
+    </select>
+    <select class="toolbar-select" id="filterModule">
+        <option value="">Filtres : tous les modules</option>
+    </select>
+</div>
+
+<div class="rapport-table-card">
+    <table class="rapport-table" id="rapportTable">
+        <thead>
+            <tr>
+                <th data-key="code">Code <span class="sort-arrow">⇅</span></th>
+                <th data-key="titre">Titre <span class="sort-arrow">⇅</span></th>
+                <th data-key="module">Module <span class="sort-arrow">⇅</span></th>
+                <th data-key="duree">Durée <span class="sort-arrow">⇅</span></th>
+                <th>Domaines</th>
+                <th data-key="sessions">Sessions <span class="sort-arrow">⇅</span></th>
+            </tr>
+        </thead>
+        <tbody id="rapportBody">
+            @foreach (var f in Model)
+            {
+                <tr class="rapport-row"
+                    data-code="@f.Code"
+                    data-titre="@f.Title"
+                    data-module="@f.Module"
+                    data-duree="@f.Duration"
+                    data-sessions="@f.Sessions.Count">
+                    <td>@f.Code</td>
+                    <td>@f.Title</td>
+                    <td>@f.Module</td>
+                    <td class="duree-cell"><i class="bi bi-clock"></i>@f.Duration jours</td>
+                    <td>
+                        @foreach (var d in f.FormationDomains)
+                        {
+                            var nom = d.Domain.Name;
+                            var cssClass = "dom-default";
+                            if (nom.Contains("IT") || nom.Contains("Technologies")) { cssClass = "dom-it"; }
+                            else if (nom.Contains("Réseaux") || nom.Contains("Reseaux")) { cssClass = "dom-reseaux"; }
+                            else if (nom.Contains("Marketing") || nom.Contains("Communication") || nom.Contains("vente")) { cssClass = "dom-marketing"; }
+                            else if (nom.Contains("Finance") || nom.Contains("Gestion")) { cssClass = "dom-finance"; }
+
+                            <span class="badge-domaine @cssClass">@nom</span>
+                        }
+                    </td>
+                    <td>@f.Sessions.Count</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="no-results" id="noResults" style="display:none;">
+        <i class="bi bi-inbox"></i>
+        Aucun résultat trouvé.
+    </div>
+
+    <div class="rapport-footer">
+        <span id="paginationInfo">Affichage de 1 à @Model.Count() sur @Model.Count() lignes</span>
+        <div class="pagination-controls" id="paginationControls"></div>
+        <div>
+            Lignes par page :
+            <select class="toolbar-select" id="pageSizeSelect" style="min-width:80px; padding:6px 10px;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="9999">Tout</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="rapport-info">
+    <i class="bi bi-info-circle"></i>
+    Ce rapport est généré automatiquement à partir des données disponibles dans le système.
+</div>
+
+@section Scripts {
+    <!-- Génération PDF (tableau réel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- Génération Excel réel (.xlsx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        (function() {
+            const searchInput = document.getElementById('rapportSearch');
+            const sortSelect = document.getElementById('sortSelect');
+            const filterModule = document.getElementById('filterModule');
+            const pageSizeSelect = document.getElementById('pageSizeSelect');
+            const tbody = document.getElementById('rapportBody');
+            const noResults = document.getElementById('noResults');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
+            const lignesChip = document.getElementById('lignesChip');
+
+            let allRows = Array.from(tbody.querySelectorAll('tr.rapport-row'));
+            let currentPage = 1;
+
+            // Remplit dynamiquement les options du filtre Module
+            const modules = [...new Set(allRows.map(r => r.dataset.module))];
+            modules.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                filterModule.appendChild(opt);
+            });
+
+            function getFiltered() {
+                const term = searchInput.value.trim().toLowerCase();
+                const mod = filterModule.value;
+                return allRows.filter(r => {
+                    const matchesSearch = !term || r.textContent.toLowerCase().includes(term);
+                    const matchesModule = !mod || r.dataset.module === mod;
+                    return matchesSearch && matchesModule;
+                });
+            }
+
+            function getSorted(rows) {
+                const [key, dir] = sortSelect.value.split('-');
+                const sorted = [...rows].sort((a, b) => {
+                    let va = a.dataset[key === 'code' ? 'code' : key === 'titre' ? 'titre' : key === 'duree' ? 'duree' : 'code'];
+                    let vb = b.dataset[key === 'code' ? 'code' : key === 'titre' ? 'titre' : key === 'duree' ? 'duree' : 'code'];
+                    if (key === 'duree') {
+                        va = parseInt(va) || 0;
+                        vb = parseInt(vb) || 0;
+                        return va - vb;
+                    }
+                    return String(va).localeCompare(String(vb));
+                });
+                if (dir === 'desc') sorted.reverse();
+                return sorted;
+            }
+
+            // Extrait les données propres (sans HTML/icônes) à partir des lignes visibles/triées/filtrées
+            function getRowsData(rows) {
+                return rows.map(r => {
+                    const cells = r.querySelectorAll('td');
+                    const domaines = Array.from(cells[4].querySelectorAll('.badge-domaine'))
+                        .map(b => b.textContent.trim())
+                        .join(' | ');
+                    return {
+                        code: cells[0].textContent.trim(),
+                        titre: cells[1].textContent.trim(),
+                        module: cells[2].textContent.trim(),
+                        duree: r.dataset.duree + ' jours',
+                        domaines: domaines,
+                        sessions: cells[5].textContent.trim()
+                    };
+                });
+            }
+
+            function render() {
+                const filtered = getSorted(getFiltered());
+                const pageSize = parseInt(pageSizeSelect.value);
+                const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                allRows.forEach(r => r.style.display = 'none');
+
+                const start = (currentPage - 1) * pageSize;
+                const pageRows = filtered.slice(start, start + pageSize);
+                pageRows.forEach(r => { r.style.display = ''; tbody.appendChild(r); });
+
+                noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+                lignesChip.innerHTML = '<i class="bi bi-list-ul"></i> ' + filtered.length + ' lignes';
+
+                const from = filtered.length === 0 ? 0 : start + 1;
+                const to = Math.min(start + pageSize, filtered.length);
+                paginationInfo.textContent = `Affichage de ${from} à ${to} sur ${filtered.length} lignes`;
+
+                paginationControls.innerHTML = '';
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.onclick = () => { currentPage--; render(); };
+                paginationControls.appendChild(prevBtn);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = p;
+                    if (p === currentPage) btn.classList.add('active');
+                    btn.onclick = () => { currentPage = p; render(); };
+                    paginationControls.appendChild(btn);
+                }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.onclick = () => { currentPage++; render(); };
+                paginationControls.appendChild(nextBtn);
+            }
+
+            searchInput.addEventListener('input', () => { currentPage = 1; render(); });
+            sortSelect.addEventListener('change', () => { currentPage = 1; render(); });
+            filterModule.addEventListener('change', () => { currentPage = 1; render(); });
+            pageSizeSelect.addEventListener('change', () => { currentPage = 1; render(); });
+
+            // ---- Export PDF réel (tableau, pas une capture d'écran) ----
+            document.getElementById('btnExportPdf').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+                doc.setFontSize(16);
+                doc.setTextColor(27, 43, 82); // navy
+                doc.text('Rapport Formations', 40, 40);
+
+                doc.setFontSize(10);
+                doc.setTextColor(107, 114, 128);
+                doc.text('Généré le ' + '@genereLe', 40, 58);
+
+                const data = getRowsData(getSorted(getFiltered()));
+
+                doc.autoTable({
+                    startY: 75,
+                    head: [['Code', 'Titre', 'Module', 'Durée', 'Domaines', 'Sessions']],
+                    body: data.map(d => [d.code, d.titre, d.module, d.duree, d.domaines, d.sessions]),
+                    styles: { fontSize: 9, cellPadding: 6 },
+                    headStyles: { fillColor: [27, 43, 82], textColor: 255, fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [249, 250, 251] },
+                    margin: { left: 40, right: 40 }
+                });
+
+                doc.save('rapport_formations.pdf');
+            });
+
+            // ---- Export Excel réel (.xlsx, pas un CSV) ----
+            document.getElementById('btnExportExcel').addEventListener('click', function() {
+                const data = getRowsData(getSorted(getFiltered()));
+
+                const wsData = [
+                    ['Code', 'Titre', 'Module', 'Durée', 'Domaines', 'Sessions'],
+                    ...data.map(d => [d.code, d.titre, d.module, d.duree, d.domaines, d.sessions])
+                ];
+
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                ws['!cols'] = [
+                    { wch: 10 }, { wch: 30 }, { wch: 18 }, { wch: 12 }, { wch: 35 }, { wch: 10 }
+                ];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Formations');
+
+                XLSX.writeFile(wb, 'rapport_formations.xlsx');
+            });
+
+            render();
+        })();
+    </script>
+}

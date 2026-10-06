@@ -1,0 +1,500 @@
+﻿
+@model Training_tunisie_telecome.Models.ViewModels.EmployeeHistoryPageViewModel
+
+@{
+    ViewData["Title"] = "Historique des formations";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+
+    var accents = new[]
+    {
+        new { Border = "#c4b5fd", IconBg = "#f4f0ff", IconColor = "#7c3aed" }, // violet
+        new { Border = "#93c5fd", IconBg = "#e0f2fe", IconColor = "#0284c7" }, // bleu
+        new { Border = "#fcd34d", IconBg = "#fef3c7", IconColor = "#d97706" }, // orange
+        new { Border = "#86efac", IconBg = "#dcfce7", IconColor = "#16a34a" }, // vert
+        new { Border = "#f9a8d4", IconBg = "#fce7f3", IconColor = "#db2777" }, // rose
+    };
+}
+
+@section Styles {
+
+    <style>
+
+        .history-page {
+            background: #f6f7fb;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .page-subtitle {
+            color: #8592a6;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        /* TOOLBAR */
+
+        .history-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 12px 18px;
+            border: 1px solid #edf0f5;
+            box-shadow: 0 4px 14px rgba(20,41,122,.04);
+        }
+
+        .history-count {
+            color: #4b5872;
+            font-size: 13.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .history-count i {
+                color: #6366f1;
+            }
+
+        .history-sort {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4b5872;
+            font-size: 12.5px;
+        }
+
+            .history-sort select {
+                border: 1px solid #e2e6ef;
+                border-radius: 6px;
+                padding: 6px 12px;
+                font-size: 12.5px;
+                color: #14297a;
+                font-weight: 700;
+                background: white;
+                cursor: pointer;
+            }
+
+                .history-sort select:focus {
+                    outline: none;
+                    border-color: #c7d2fe;
+                }
+
+        /* GRID — 3 cartes par ligne */
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        @@media(max-width:768px) {
+            .history-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @@media(max-width:520px) {
+            .history-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            border: 1.5px solid var(--accent-border);
+            min-width: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .history-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            }
+
+        /* HEAD : avatar + libellé + titre */
+
+        .history-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .history-avatar {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 8px;
+            background: var(--accent-bg);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .history-label {
+            color: var(--accent-color);
+            font-size: 13.5px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .history-title {
+            color: #1a1a2e;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        /* META : icone + texte */
+
+        .history-meta {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            color: #374151;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+            .history-meta i {
+                color: #9ca3af;
+                width: 14px;
+                text-align: center;
+                margin-top: 2px;
+            }
+
+            .history-meta.accent {
+                color: var(--accent-color);
+                font-weight: 700;
+            }
+
+                .history-meta.accent i {
+                    color: var(--accent-color);
+                }
+
+        /* FOOTER : boutons carrés */
+
+        .history-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f1f5;
+        }
+
+        .pill-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1.5px solid;
+            white-space: nowrap;
+            gap: 4px;
+        }
+
+            .pill-btn.present {
+                color: #16a34a;
+                border-color: #bbf7d0;
+                background: white;
+            }
+
+            .pill-btn.absent {
+                color: #dc2626;
+                border-color: #fecaca;
+                background: white;
+            }
+
+            .pill-btn.excused {
+                color: #d97706;
+                border-color: #fde68a;
+                background: white;
+            }
+
+            .pill-btn.eval-done {
+                color: #2563eb;
+                border-color: #bfdbfe;
+                background: white;
+            }
+
+            .pill-btn.eval-pending {
+                color: #64748b;
+                border-color: #e2e6ef;
+                background: white;
+            }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 6px;
+            background: #fee2e2;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* PAGINATION */
+
+        .history-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 18px;
+        }
+
+            .history-pagination .page-btn {
+                min-width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                border: 1px solid #e2e6ef;
+                background: white;
+                color: #4b5872;
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 8px;
+                transition: .15s;
+            }
+
+                .history-pagination .page-btn:hover {
+                    border-color: #c7d2fe;
+                }
+
+                .history-pagination .page-btn.active {
+                    background: #6d28d9;
+                    border-color: #6d28d9;
+                    color: white;
+                }
+
+                .history-pagination .page-btn:disabled {
+                    opacity: .4;
+                    cursor: not-allowed;
+                }
+
+        /* EMPTY */
+
+        .empty-history {
+            background: white;
+            border-radius: 8px;
+            padding: 50px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+    </style>
+
+}
+
+
+<div class="history-page">
+
+    <div class="page-subtitle">
+        Retrouvez toutes vos formations terminées et vos évaluations.
+    </div>
+
+    @if (Model.Completed.Any())
+    {
+        <div class="history-toolbar">
+
+            <div class="history-count">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="formationCount">@Model.Completed.Count()</span> formations terminées
+            </div>
+
+            <div class="history-sort">
+                <label for="sortSelect">Trier par :</label>
+                <select id="sortSelect">
+                    <option value="recent">Plus récente</option>
+                    <option value="ancienne">Plus ancienne</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <div id="historyList" class="history-grid">
+
+            @{
+                int i = 0;
+            }
+
+            @foreach (var formation in Model.Completed)
+            {
+                var accent = accents[i % accents.Length];
+                i++;
+
+                <div class="history-card"
+                     data-date="@formation.DateStart.ToString("yyyy-MM-dd")"
+                     style="--accent-border:@accent.Border; --accent-bg:@accent.IconBg; --accent-color:@accent.IconColor;">
+
+                    <div class="history-head">
+
+                        <div class="history-avatar">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+
+                        <div>
+                            <div class="history-label">@formation.Title</div>
+                            <div class="history-title">
+                                @formation.DateStart.ToString("dd/MM/yyyy") - @formation.DateEnd.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="history-meta">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        @formation.Trainer
+                    </div>
+
+                    <div class="history-meta">
+                        <i class="fa-solid fa-location-dot"></i>
+                        @formation.Location
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(formation.Module))
+                    {
+                        <div class="history-meta accent">
+                            <i class="fa-solid fa-compass"></i>
+                            Domaines : @formation.Module
+                        </div>
+                    }
+
+                    <div class="history-footer">
+
+                        @if (formation.PresenceStatus == "Présent")
+                        {
+                            <span class="pill-btn present"><i class="fa-solid fa-check"></i> Présent</span>
+                        }
+                        else if (formation.PresenceStatus == "Absent")
+                        {
+                            <span class="pill-btn absent"><i class="fa-solid fa-xmark"></i> Absent</span>
+                        }
+                        else
+                        {
+                            <span class="pill-btn excused"><i class="fa-solid fa-triangle-exclamation"></i> @formation.PresenceStatus</span>
+                        }
+
+                        @if (formation.EvaluationStatus == "Complétée")
+                        {
+                            <span class="pill-btn eval-done"><i class="fa-solid fa-file-circle-check"></i> Terminée</span>
+                        }
+                        else
+                        {
+                            <span class="pill-btn eval-pending"><i class="fa-solid fa-file"></i> À compléter</span>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+        <div class="history-pagination" id="historyPagination"></div>
+
+    }
+    else
+    {
+        <div class="empty-history">
+            <i class="fa-regular fa-folder-open" style="font-size:35px;margin-bottom:15px;"></i>
+            <div>Aucune formation terminée.</div>
+        </div>
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+        (function() {
+            const PAGE_SIZE = 9;
+            const list = document.getElementById('historyList');
+            if (!list) return;
+
+            const sortSelect = document.getElementById('sortSelect');
+            const paginationEl = document.getElementById('historyPagination');
+            const countEl = document.getElementById('formationCount');
+
+            let cards = Array.from(list.querySelectorAll('.history-card'));
+            let currentPage = 1;
+
+            function sortCards(order) {
+                cards.sort((a, b) => {
+                    const da = new Date(a.dataset.date);
+                    const db = new Date(b.dataset.date);
+                    return order === 'ancienne' ? da - db : db - da;
+                });
+                cards.forEach(c => list.appendChild(c));
+            }
+
+            function renderPage(page) {
+                const totalPages = Math.max(1, Math.ceil(cards.length / PAGE_SIZE));
+                currentPage = Math.min(Math.max(1, page), totalPages);
+
+                cards.forEach((card, idx) => {
+                    const start = (currentPage - 1) * PAGE_SIZE;
+                    const end = start + PAGE_SIZE;
+                    card.style.display = (idx >= start && idx < end) ? 'block' : 'none';
+                });
+
+                renderPagination(totalPages);
+                if (countEl) countEl.textContent = cards.length;
+            }
+
+            function renderPagination(totalPages) {
+                paginationEl.innerHTML = '';
+
+                const makeBtn = (label, page, opts = {}) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'page-btn' + (opts.active ? ' active' : '');
+                    btn.innerHTML = label;
+                    btn.disabled = !!opts.disabled;
+                    btn.addEventListener('click', () => renderPage(page));
+                    return btn;
+                };
+
+                paginationEl.appendChild(makeBtn('<i class="fa-solid fa-angles-left"></i>', 1, { disabled: currentPage === 1 }));
+                paginationEl.appendChild(makeBtn('<i class="fa-solid fa-angle-left"></i>', currentPage - 1, { disabled: currentPage === 1 }));
+
+                for (let p = 1; p <= totalPages; p++) {
+                    paginationEl.appendChild(makeBtn(p, p, { active: p === currentPage }));
+                }
+
+                paginationEl.appendChild(makeBtn('<i class="fa-solid fa-angle-right"></i>', currentPage + 1, { disabled: currentPage === totalPages }));
+                paginationEl.appendChild(makeBtn('<i class="fa-solid fa-angles-right"></i>', totalPages, { disabled: currentPage === totalPages }));
+            }
+
+            sortSelect?.addEventListener('change', (e) => {
+                sortCards(e.target.value);
+                renderPage(1);
+            });
+
+            sortCards('recent');
+            renderPage(1);
+        })();
+    </script>
+
+}

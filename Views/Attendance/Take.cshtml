@@ -1,0 +1,1186 @@
+﻿@model Training_tunisie_telecome.Models.SessionFormation
+
+@{
+    ViewData["Title"] = "Présence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var total = Model.Participants?.Count() ?? 0;
+
+    var employees = ViewBag.Employees
+        as List<Training_tunisie_telecome.Models.Employee>;
+}
+
+
+
+<style>
+
+    .presence-page {
+        padding: 5px 15px;
+    }
+
+
+    /* HEADER */
+
+    .session-header {
+        background: white;
+        border-radius: 16px;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .session-title {
+        color: #14297a;
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 5px 0;
+    }
+
+
+
+    .session-info {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+
+
+
+    .export-btn {
+        background: white;
+        border: 1px solid #dbe3f0;
+        color: #14297a;
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+
+
+
+
+
+    /* STATS */
+
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+
+
+
+    .stat-card {
+        background: white;
+        border-radius: 14px;
+        padding: 8px 12px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.04);
+        text-align: center;
+    }
+
+
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+
+    .blue {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+
+    .green {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+
+    .orange {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+
+    .purple {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+
+
+    .yellow {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+
+    .stat-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+
+    .stat-number {
+        font-size: 19px;
+        font-weight: 700;
+        color: #14297a;
+        text-align: center;
+    }
+
+
+    .stat-label {
+        font-size: 12px;
+        color: #64748b;
+        text-align: center;
+    }
+
+
+
+
+
+
+    /* FILTER */
+
+
+    .filters {
+        background: white;
+        padding: 8px;
+        border-radius: 14px;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+
+
+    .search {
+        flex: 1;
+        position: relative;
+    }
+
+
+        .search input,
+        .filter {
+            height: 36px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 13px;
+        }
+
+
+
+        .search input {
+            width: 100%;
+            padding-left: 35px;
+        }
+
+
+
+        .search i {
+            position: absolute;
+            left: 12px;
+            top: 11px;
+            color: #94a3b8;
+        }
+
+
+
+
+
+
+
+    /* TABLE */
+
+
+    .table-box {
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0,0,0,.04);
+    }
+
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+
+    th {
+        color: #14297a;
+        font-size: 12px;
+        text-align: left;
+        padding: 9px 14px;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+
+
+    td {
+        padding: 7px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
+    }
+
+
+
+
+    .employee {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+
+
+    .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #e0e7ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #14297a;
+    }
+
+
+
+    .name {
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+
+
+    .domain {
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+
+
+
+
+    .status-select,
+    .replacement-select {
+        height: 30px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        padding: 0 10px;
+        font-size: 12px;
+        background: transparent;
+        font-weight: 600;
+        color: #334155;
+    }
+
+
+
+
+    /* STATUS COLORS — le select reste transparent, seule la couleur du texte / bordure change */
+
+
+    .status-present {
+        background: transparent;
+        color: #15803d;
+        font-weight: 700;
+        border: 1px solid #86efac;
+    }
+
+
+
+    .status-absent {
+        background: transparent;
+        color: #b91c1c;
+        font-weight: 700;
+        border: 1px solid #fca5a5;
+    }
+
+
+
+
+    .status-excuse {
+        background: transparent;
+        color: #c2410c;
+        font-weight: 700;
+        border: 1px solid #fdba74;
+    }
+
+
+
+
+    .actions {
+        margin-top: 12px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+
+
+    .btn {
+        padding: 9px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+
+
+    .save {
+        background: #14297a;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: transform .12s ease, box-shadow .12s ease, background .15s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .save:hover {
+            background: #1c3494;
+            box-shadow: 0 4px 14px rgba(20,41,122,.35);
+        }
+
+        .save:active {
+            transform: scale(.94);
+            box-shadow: 0 2px 6px rgba(20,41,122,.35);
+        }
+
+        .save:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+
+
+    .back {
+        background: #f1f5f9;
+        color: #475569;
+        text-decoration: none;
+        transition: transform .12s ease, background .15s ease;
+        display: inline-block;
+    }
+
+        .back:active {
+            transform: scale(.94);
+        }
+
+
+
+
+    /* POPUP DE CONFIRMATION */
+
+    .save-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .2s ease;
+    }
+
+        .save-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+    .save-popup {
+        background: white;
+        border-radius: 18px;
+        padding: 30px 34px;
+        width: 320px;
+        max-width: 90vw;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,.25);
+        transform: scale(.85);
+        transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    .save-overlay.show .save-popup {
+        transform: scale(1);
+    }
+
+    .save-popup-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        background: #dcfce7;
+        color: #16a34a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+    }
+
+    .save-popup-title {
+        color: #14297a;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .save-popup-text {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+</style>
+<div class="presence-page">
+
+
+    <div class="session-header">
+
+
+        <div>
+
+            <h1 class="session-title">
+
+                @Model.Formation?.Title
+
+            </h1>
+
+
+            <div class="session-info">
+
+                <i class="fa fa-calendar"></i>
+
+                @Model.DateStart.ToString("dd/MM/yyyy")
+
+
+                &nbsp; | &nbsp;
+
+
+                <i class="fa fa-location-dot"></i>
+
+                @Model.Location
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <a asp-controller="Attendance"
+           asp-action="ExportPdf"
+           asp-route-id="@Model.Id"
+           class="export-btn">
+
+            <i class="fa fa-file-pdf"></i>
+
+            Exporter PDF
+
+        </a>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="stats-row">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+
+                <i class="fa fa-users"></i>
+
+            </div>
+
+            <div class="stat-text">
+
+                <div class="stat-number">
+
+                    @total
+
+                </div>
+
+                <div class="stat-label">
+
+                    Participants
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+
+                <i class="fa fa-check"></i>
+
+            </div>
+
+
+            <div class="stat-text">
+
+                <div class="stat-number" id="present">
+
+                    0
+
+                </div>
+
+                <div class="stat-label">
+
+                    Présents
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+
+                <i class="fa fa-xmark"></i>
+
+            </div>
+
+
+            <div class="stat-text">
+
+                <div class="stat-number" id="absent">
+
+                    0
+
+                </div>
+
+
+                <div class="stat-label">
+
+                    Absents
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon yellow">
+
+                <i class="fa fa-user-clock"></i>
+
+            </div>
+
+
+            <div class="stat-text">
+
+                <div class="stat-number" id="excuse">
+
+                    0
+
+                </div>
+
+
+                <div class="stat-label">
+
+                    Excusés
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="stat-card">
+
+
+            <div class="stat-icon purple">
+
+                <i class="fa fa-chart-line"></i>
+
+            </div>
+
+
+            <div class="stat-text">
+
+                <div class="stat-number" id="rate">
+
+                    0%
+
+                </div>
+
+
+                <div class="stat-label">
+
+                    Taux présence
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <form asp-action="Save" method="post" id="attendanceForm">
+
+
+        <input type="hidden"
+               name="sessionId"
+               value="@Model.Id" />
+
+
+
+
+
+        <div class="filters">
+
+
+            <div class="search">
+
+
+                <i class="fa fa-search"></i>
+
+
+                <input id="search"
+                       placeholder="Rechercher employé..." />
+
+
+            </div>
+
+
+
+
+
+            <select id="domainFilter"
+                    class="filter">
+
+
+                <option value="">
+                    Tous les domaines
+                </option>
+
+
+                @foreach (var d in Model.Participants
+                .Select(x => x.Employee?.Domain?.Name)
+                .Distinct())
+                {
+
+                    <option value="@d">
+
+                        @d
+
+                    </option>
+
+                }
+
+
+            </select>
+
+
+
+
+
+
+            <select id="statusFilter"
+                    class="filter">
+
+
+                <option value="">
+                    Tous les statuts
+                </option>
+
+
+                <option value="Présent">
+                    Présent
+                </option>
+
+
+                <option value="Absent">
+                    Absent
+                </option>
+
+
+                <option value="Excusé">
+                    Excusé
+                </option>
+
+
+            </select>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="table-box">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Employé
+                        </th>
+
+
+                        <th>
+                            Matricule
+                        </th>
+
+
+                        <th>
+                            Domaine
+                        </th>
+
+
+                        <th>
+                            Statut
+                        </th>
+
+
+                        <th>
+                            Remplaçant
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+
+
+
+                <tbody>
+
+
+
+                    @foreach (var p in Model.Participants)
+                    {
+
+
+                        var lastStatus =
+                        p.Attendances
+                        .OrderByDescending(a => a.CreatedAt)
+                        .FirstOrDefault()
+                        ?.Status
+                        ?? "Absent";
+
+
+
+                        <tr class="row"
+                            data-domain="@p.Employee?.Domain?.Name"
+                            data-name="@($"{p.Employee?.FirstName} {p.Employee?.LastName}")">
+
+
+                            <td>
+
+
+                                <div class="employee">
+
+
+                                    @if (!string.IsNullOrEmpty(p.Employee?.ImagePath))
+                                    {
+
+                                        <img src="@p.Employee.ImagePath"
+                                             width="34"
+                                             height="34"
+                                             style="border-radius:50%" />
+
+                                    }
+                                    else
+                                    {
+
+                                        <div class="avatar">
+
+                                            @p.Employee?.FirstName?.Substring(0, 1)
+
+                                        </div>
+
+                                    }
+
+
+
+                                    <div class="name">
+
+                                        @p.Employee?.FirstName
+                                        @p.Employee?.LastName
+
+                                    </div>
+
+
+
+                                </div>
+
+
+                            </td>
+
+
+
+
+
+
+                            <td>
+
+                                @p.Employee?.Matricule
+
+                            </td>
+
+
+
+
+
+
+
+                            <td>
+
+                                <span class="domain">
+
+                                    @p.Employee?.Domain?.Name
+
+                                </span>
+
+                            </td>
+
+
+
+
+
+
+
+                            <td>
+
+
+
+                                <select class="status-select
+                                    @(lastStatus == "Présent" ? "status-present" :
+                                        lastStatus == "Absent" ? "status-absent" :
+                                        "status-excuse")"
+                                        name="statuses[@p.Id]"
+                                        onchange="changeColor(this);updateStats()">
+
+
+
+                                    <option value="Présent"
+                                            selected="@(lastStatus == "Présent")">
+
+                                        Présent
+
+                                    </option>
+
+
+
+                                    <option value="Absent"
+                                            selected="@(lastStatus == "Absent")">
+
+                                        Absent
+
+                                    </option>
+
+
+
+                                    <option value="Excusé"
+                                            selected="@(lastStatus == "Excusé")">
+
+                                        Excusé
+
+                                    </option>
+
+
+
+                                </select>
+
+
+
+                            </td>
+
+
+
+
+
+
+
+
+
+                            <td>
+
+
+
+                                @if (p.ReplacementEmployee != null)
+                                {
+
+
+                                    <span class="domain">
+
+                                        @p.ReplacementEmployee.FirstName
+                                        @p.ReplacementEmployee.LastName
+
+                                    </span>
+
+
+                                }
+                                else
+                                {
+
+
+                                    <select class="replacement-select"
+                                            name="replacements[@p.Id]">
+
+
+                                        <option value="">
+                                            -- Aucun --
+                                        </option>
+
+
+
+                                        @if (employees != null)
+                                        {
+
+                                            foreach (var e in employees)
+                                            {
+
+                                                <option value="@e.Id">
+
+                                                    @e.FirstName @e.LastName
+
+                                                </option>
+
+
+                                            }
+
+                                        }
+
+
+                                    </select>
+
+
+                                }
+
+
+                            </td>
+
+
+
+
+                        </tr>
+
+
+                    }
+
+
+
+
+                </tbody>
+
+
+
+            </table>
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="actions">
+
+
+            <a asp-action="Index"
+               class="btn back">
+
+                Retour
+
+            </a>
+
+
+
+
+            <button type="submit"
+                    class="btn save"
+                    id="saveBtn">
+
+                <i class="fa fa-save"></i>
+
+                Enregistrer
+
+            </button>
+
+
+
+        </div>
+
+
+
+
+    </form>
+
+
+
+</div>
+
+
+<div class="save-overlay" id="saveOverlay">
+    <div class="save-popup">
+        <div class="save-popup-icon">
+            <i class="fa fa-check"></i>
+        </div>
+        <div class="save-popup-title">
+            Liste de présence enregistrée
+        </div>
+        <div class="save-popup-text">
+            Les statuts ont été enregistrés avec succès.
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeColor(select) {
+        select.classList.remove('status-present', 'status-absent', 'status-excuse');
+
+        if (select.value === 'Présent') {
+            select.classList.add('status-present');
+        } else if (select.value === 'Absent') {
+            select.classList.add('status-absent');
+        } else {
+            select.classList.add('status-excuse');
+        }
+    }
+
+    function updateStats() {
+        var selects = document.querySelectorAll('.status-select');
+        var present = 0, absent = 0, excuse = 0;
+
+        selects.forEach(function(s) {
+            if (s.value === 'Présent') present++;
+            else if (s.value === 'Absent') absent++;
+            else if (s.value === 'Excusé') excuse++;
+        });
+
+        var total = selects.length;
+        var rate = total > 0 ? Math.round((present / total) * 100) : 0;
+
+        document.getElementById('present').textContent = present;
+        document.getElementById('absent').textContent = absent;
+        document.getElementById('excuse').textContent = excuse;
+        document.getElementById('rate').textContent = rate + '%';
+    }
+
+    document.addEventListener('DOMContentLoaded', updateStats);
+
+    // Popup de confirmation à l'enregistrement
+    var attendanceForm = document.getElementById('attendanceForm');
+    var saveOverlay = document.getElementById('saveOverlay');
+    var saveBtn = document.getElementById('saveBtn');
+    var isSubmitting = false;
+
+    attendanceForm.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+            return; // laisse la 2e soumission (déclenchée par le script) passer normalement
+        }
+
+        e.preventDefault();
+
+        saveBtn.disabled = true;
+        saveOverlay.classList.add('show');
+
+        setTimeout(function() {
+            isSubmitting = true;
+            attendanceForm.submit();
+        }, 1100);
+    });
+</script>

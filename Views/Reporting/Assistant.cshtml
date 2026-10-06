@@ -1,0 +1,468 @@
+﻿@model Training_tunisie_telecome.Models.ViewModels.AiRequestViewModel
+
+@{
+    ViewData["Title"] = "Assistant IA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="assistant-container">
+
+    <div class="assistant-header">
+        <div>
+            <h2>
+                <i class="fa-solid fa-microchip"></i>
+                Assistant IA
+            </h2>
+
+            <p>
+                Analysez les données de formation et obtenez des réponses personnalisées.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="assistant-grid">
+
+        <!-- QUESTION -->
+
+        <div class="assistant-card">
+
+            <div class="assistant-card-header">
+
+                <div class="assistant-icon">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+
+                <div>
+                    <h3>Votre demande</h3>
+
+                    <p>
+                        Décrivez le rapport ou l'analyse que vous souhaitez obtenir.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <form asp-controller="Reporting"
+                  asp-action="Assistant"
+                  method="post">
+
+                <div class="form-group">
+
+                    <label asp-for="Question">
+                        Question
+                    </label>
+
+                    <textarea asp-for="Question"
+                              id="aiQuestion"
+                              class="ai-textarea"
+                              maxlength="500"
+                              placeholder="Exemple : Quelles sont les formations les plus suivies cette année ?"></textarea>
+
+                    <span asp-validation-for="Question"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <div class="suggestions">
+
+                    <span class="suggestions-title">
+                        Suggestions
+                    </span>
+
+                    <button type="button"
+                            class="suggestion"
+                            data-question="Quelles sont les formations les plus suivies cette année ?">
+                        Formations les plus suivies
+                    </button>
+
+                    <button type="button"
+                            class="suggestion"
+                            data-question="Quel est le taux de participation des employés ?">
+                        Taux de participation
+                    </button>
+
+                    <button type="button"
+                            class="suggestion"
+                            data-question="Quel est le coût total des formations ?">
+                        Coût total des formations
+                    </button>
+
+                    <button type="button"
+                            class="suggestion"
+                            data-question="Quels sont les domaines de formation les plus populaires ?">
+                        Domaines les plus populaires
+                    </button>
+
+                </div>
+
+
+                <div class="assistant-footer">
+
+                    <span class="char-count">
+                        <span id="charCount">0</span>/500
+                    </span>
+
+                    <button type="submit"
+                            class="btn-analyser">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        Analyser
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- REPONSE -->
+
+        <div class="assistant-card answer-card">
+
+            <div class="assistant-card-header">
+
+                <div class="assistant-icon answer-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <div>
+                    <h3>Analyse</h3>
+
+                    <p>
+                        Résultat de votre demande
+                    </p>
+                </div>
+
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(Model?.Answer))
+            {
+                <div class="answer-content">
+
+                    <div class="answer-label">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Résultat
+                    </div>
+
+                    <div class="answer-text">
+                        @Model.Answer
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="empty-answer">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <h4>Aucune analyse disponible</h4>
+
+                    <p>
+                        Saisissez une question à gauche pour commencer l'analyse.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .assistant-container {
+        width: 100%;
+    }
+
+    .assistant-header {
+        margin-bottom: 25px;
+    }
+
+    .assistant-header h2 {
+        margin: 0;
+        color: #14297a;
+        font-size: 26px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .assistant-header h2 i {
+        color: #4f46e5;
+    }
+
+    .assistant-header p {
+        margin: 7px 0 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .assistant-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .assistant-card {
+        background: #ffffff;
+        border: 1px solid #e8ebf2;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(20, 41, 122, 0.04);
+    }
+
+    .assistant-card-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 25px;
+    }
+
+    .assistant-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        background: #eef2ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .answer-icon {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+    .assistant-card-header h3 {
+        margin: 0 0 4px;
+        color: #14297a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .assistant-card-header p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .ai-textarea {
+        width: 100%;
+        min-height: 150px;
+        resize: vertical;
+        border: 1px solid #dfe4ec;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 14px;
+        color: #334155;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .ai-textarea:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+    }
+
+    .suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .suggestions-title {
+        width: 100%;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .suggestion {
+        border: 1px solid #e0e7ff;
+        background: #f8faff;
+        color: #4338ca;
+        border-radius: 9px;
+        padding: 8px 11px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .suggestion:hover {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+    }
+
+    .assistant-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .char-count {
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .btn-analyser {
+        border: none;
+        background: #4f46e5;
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .btn-analyser:hover {
+        background: #4338ca;
+    }
+
+    .answer-card {
+        min-height: 350px;
+    }
+
+    .answer-content {
+        border: 1px solid #e0f2fe;
+        background: #f8fcff;
+        border-radius: 13px;
+        padding: 18px;
+    }
+
+    .answer-label {
+        color: #0284c7;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .answer-text {
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+    .empty-answer {
+        min-height: 260px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #94a3b8;
+    }
+
+    .empty-answer i {
+        font-size: 42px;
+        color: #c7d2fe;
+        margin-bottom: 15px;
+    }
+
+    .empty-answer h4 {
+        margin: 0 0 7px;
+        color: #475569;
+        font-size: 16px;
+    }
+
+    .empty-answer p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    @@media (max-width: 900px) {
+
+        .assistant-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const textarea = document.getElementById("aiQuestion");
+        const counter = document.getElementById("charCount");
+        const suggestions = document.querySelectorAll(".suggestion");
+
+        function updateCounter() {
+
+            if (textarea && counter) {
+                counter.textContent = textarea.value.length;
+            }
+
+        }
+
+        if (textarea) {
+
+            textarea.addEventListener("input", updateCounter);
+
+        }
+
+        suggestions.forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+                textarea.value = this.dataset.question;
+
+                updateCounter();
+
+                textarea.focus();
+
+            });
+
+        });
+
+        updateCounter();
+
+    });
+
+</script>

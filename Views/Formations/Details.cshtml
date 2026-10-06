@@ -1,0 +1,1283 @@
+﻿@model Training_tunisie_telecome.Models.Formation
+
+@{
+    ViewData["Title"] = "Détails Formation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .details-container {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+
+
+    /* HEADER */
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 35px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+
+    .profile-icon {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: #e8edff;
+        color: #14297a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+
+
+
+    .profile-info h2 {
+        color: #14297a;
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+
+
+    .formation-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #e8edff;
+        color: #14297a;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+
+    .profile-description {
+        margin-top: 14px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 28px 0 18px;
+        color: #14297a;
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+
+
+    .section-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: #e8edff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+    /* INFO */
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 60px;
+    }
+
+
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 10px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+
+    .info-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: #f3e8ff;
+        color: #9b59b6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 13px;
+    }
+
+
+
+    .info-value {
+        font-size: 13px;
+        color: #111827;
+        text-align: right;
+    }
+
+
+
+    .badge-green {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+
+    .badge-orange {
+        background: #fef3c7;
+        color: #b45309;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #374151;
+        padding: 10px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+</style>
+
+
+
+
+
+<div class="details-container">
+
+
+
+    <div class="profile-header">
+
+
+
+        <div class="profile-icon">
+
+            <i class="fa fa-graduation-cap"></i>
+
+        </div>
+
+
+
+
+
+        <div class="profile-info">
+
+
+            <h2>
+                @Model.Title
+            </h2>
+
+
+
+            <div class="formation-badge">
+
+                <i class="fa fa-chalkboard"></i>
+
+                Formation
+
+            </div>
+
+
+
+
+            <div class="profile-description">
+
+
+                Code formation :
+
+                <strong>
+                    @Model.Code
+                </strong>
+
+
+                <br />
+
+
+                Module :
+
+                <strong>
+                    @Model.Module
+                </strong>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ================= INFORMATIONS GENERALES ================= -->
+
+
+<div class="section-title">
+
+
+    <div class="section-icon">
+
+        <i class="fa fa-circle-info"></i>
+
+    </div>
+
+
+    Informations générales
+
+
+</div>
+
+
+
+
+
+
+
+<div class="info-grid">
+
+
+
+    <div>
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-id-card"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Code formation
+
+                </span>
+
+
+            </div>
+
+
+
+
+            <span class="info-value">
+
+                @Model.Code
+
+            </span>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-book"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Module
+
+                </span>
+
+
+            </div>
+
+
+
+
+            <span class="info-value">
+
+                @Model.Module
+
+            </span>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-clock"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Durée
+
+                </span>
+
+
+            </div>
+
+
+
+
+            <span class="info-value">
+
+                @Model.Duration jours
+
+            </span>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <div>
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-toggle-on"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Statut
+
+                </span>
+
+
+            </div>
+
+
+
+
+            @if (Model.IsActive)
+            {
+
+                <span class="badge-green">
+
+                    Active
+
+                </span>
+
+            }
+            else
+            {
+
+                <span class="badge-orange">
+
+                    Inactive
+
+                </span>
+
+            }
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-users"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Participants
+
+                </span>
+
+
+            </div>
+
+
+
+
+            <span class="info-value">
+
+                @(Model.Sessions
+                    .FirstOrDefault()?
+                    .Participants?
+                    .Count ?? 0)
+
+            </span>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="info-item">
+
+
+            <div class="info-left">
+
+
+                <div class="info-icon">
+
+                    <i class="fa fa-layer-group"></i>
+
+                </div>
+
+
+
+                <span class="info-label">
+
+                    Domaines
+
+                </span>
+
+
+            </div>
+
+
+
+
+            <span class="info-value">
+
+
+                @string.Join(", ",
+                    Model.FormationDomains
+                    .Select(fd => fd.Domain!.Name))
+
+
+            </span>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ================= PLANIFICATION ================= -->
+
+
+
+<div class="section-title">
+
+
+    <div class="section-icon">
+
+        <i class="fa fa-calendar-days"></i>
+
+    </div>
+
+
+    Planification de la session
+
+
+</div>
+
+
+
+
+
+@{
+
+    var session = Model.Sessions.FirstOrDefault();
+
+}
+
+
+
+
+
+@if (session != null)
+{
+
+
+
+    <div class="info-grid">
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-calendar"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Date début
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.DateStart.ToString("dd/MM/yyyy")
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-calendar-check"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Date fin
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.DateEnd.ToString("dd/MM/yyyy")
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-tag"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Type
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                @if (session.Type == "Interne")
+                {
+
+                    <span class="badge-green">
+
+                        Interne
+
+                    </span>
+
+                }
+                else
+                {
+
+                    <span class="badge-orange">
+
+                        Externe
+
+                    </span>
+
+                }
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-location-dot"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Lieu
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.Location
+
+                </span>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <div class="info-item" style="margin-top:10px;">
+
+
+        <div class="info-left">
+
+
+            <div class="info-icon">
+
+                <i class="fa fa-chalkboard-user"></i>
+
+            </div>
+
+
+            <span class="info-label">
+
+                Formateur
+
+            </span>
+
+
+        </div>
+
+
+
+        <span class="info-value">
+
+            @(session.Trainer?.FirstName + " " + session.Trainer?.LastName)
+
+        </span>
+
+
+    </div>
+
+
+
+}
+
+
+
+
+
+<!-- ================= COUTS ================= -->
+
+
+<div class="section-title">
+
+
+    <div class="section-icon">
+
+        <i class="fa fa-wallet"></i>
+
+    </div>
+
+
+    Estimation des coûts
+
+
+</div>
+
+
+
+
+
+
+
+@if (session != null)
+{
+
+
+    <div class="info-grid">
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-chalkboard-user"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Coût formateur
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.TrainerCost.ToString("N3") DT
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-hotel"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Hébergement
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.HotelCost.ToString("N3") DT
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-utensils"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Repas
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.MealCost.ToString("N3") DT
+
+                </span>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div>
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-box"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Kit formation
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.KitCost.ToString("N3") DT
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="info-item">
+
+
+                <div class="info-left">
+
+
+                    <div class="info-icon">
+
+                        <i class="fa fa-plus-circle"></i>
+
+                    </div>
+
+
+
+                    <span class="info-label">
+
+                        Autres coûts
+
+                    </span>
+
+
+                </div>
+
+
+
+
+                <span class="info-value">
+
+                    @session.OtherCost.ToString("N3") DT
+
+                </span>
+
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- TOTAL -->
+
+
+
+    <div style="
+        margin-top:25px;
+        background:#f3e8ff;
+        border-radius:14px;
+        padding:18px 25px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        ">
+
+
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            color:#7c3aed;
+            font-weight:700;
+            font-size:15px;
+            ">
+
+
+            <i class="fa fa-calculator"></i>
+
+
+            Coût total de la formation
+
+
+        </div>
+
+
+
+
+
+        <strong style="
+            color:#14297a;
+            font-size:20px;
+            ">
+
+
+            @session.TotalCost.ToString("N3") DT
+
+
+        </strong>
+
+
+
+    </div>
+
+
+
+}
+
+
+
+
+
+
+
+<!-- ================= DESCRIPTION ================= -->
+
+
+
+<div class="section-title">
+
+
+    <div class="section-icon">
+
+        <i class="fa fa-align-left"></i>
+
+    </div>
+
+
+    Description
+
+
+</div>
+
+
+
+
+<div style="
+    background:#f8fafc;
+    padding:18px;
+    border-radius:12px;
+    color:#475569;
+    font-size:14px;
+    line-height:1.7;
+    ">
+
+
+    @(string.IsNullOrEmpty(Model.Description)
+        ? "Aucune description disponible."
+        : Model.Description)
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<a asp-action="Index"
+   class="btn-back">
+
+
+    <i class="fa fa-arrow-left"></i>
+
+
+    Retour à la liste
+
+
+</a>
+
+
+
+
+
+</div>

@@ -1,0 +1,799 @@
+﻿@model Training_tunisie_telecome.Models.Trainer
+
+@{
+    ViewData["Title"] = "Modifier Formateur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+.page-title {
+    font-size:24px;
+    font-weight:700;
+    color:#9b59b6;
+    margin-bottom:8px;
+}
+
+
+.breadcrumb {
+    color:#6b7280;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+
+.breadcrumb span {
+    color:#9b59b6;
+    font-weight:600;
+}
+
+
+
+.form-card {
+    background:white;
+    border-radius:16px;
+    padding:25px;
+    box-shadow:0 5px 25px rgba(0,0,0,.05);
+}
+
+
+
+.form-header {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding-bottom:18px;
+    border-bottom:1px solid #eee;
+}
+
+
+
+.header-icon {
+
+    width:55px;
+    height:55px;
+    border-radius:12px;
+    background:#f3e8ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+
+
+.header-icon i {
+    color:#9b59b6;
+    font-size:24px;
+}
+
+
+
+.header-text h3 {
+    color:#9b59b6;
+    margin:0;
+}
+
+
+
+.header-text p {
+    color:#6b7280;
+    margin-top:5px;
+}
+
+
+
+.form-group {
+    margin-bottom:20px;
+}
+
+
+
+.form-group label {
+
+    display:block;
+    color:#9b59b6;
+    font-weight:600;
+    margin-bottom:8px;
+
+}
+
+
+
+.form-control {
+
+    width:100%;
+    height:45px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:0 15px;
+    color:#374151;
+
+}
+
+
+
+.form-control:focus {
+
+    outline:none;
+    border-color:#9b59b6;
+    box-shadow:none;
+
+}
+
+
+
+select.form-control {
+
+    color:#374151;
+
+}
+
+
+
+select.form-control option {
+
+    color:#374151;
+
+}
+
+
+
+select.form-control option:first-child {
+
+    color:#c084fc;
+
+}
+
+
+
+.field-validation-error {
+
+    color:#ef4444;
+    font-size:13px;
+
+}
+
+
+
+.input-validation-error {
+
+    border:1px solid #ef4444;
+
+}
+
+
+
+/* IMAGE */
+
+
+.image-preview {
+
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #e5e7eb;
+
+}
+
+
+
+.current-image {
+
+    text-align:center;
+    margin-bottom:20px;
+
+}
+
+
+
+.file-dropzone {
+
+    border:2px dashed #d9c2ec;
+    border-radius:12px;
+    background:#faf7fc;
+    padding:30px 20px;
+    text-align:center;
+    cursor:pointer;
+
+}
+
+
+
+.file-dropzone:hover {
+
+    border-color:#9b59b6;
+    background:#f6eefb;
+
+}
+
+
+
+.file-upload-input {
+
+    display:none;
+
+}
+
+
+
+.dropzone-icon {
+
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:#f3e8ff;
+    color:#9b59b6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    margin-bottom:12px;
+
+}
+
+
+
+.dropzone-link {
+
+    color:#8e44ad;
+    font-weight:700;
+    text-decoration:underline;
+
+}
+
+
+
+.dropzone-hint {
+
+    color:#9ca3af;
+    font-size:12px;
+
+}
+
+
+
+.dropzone-file-info {
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+
+}
+
+
+
+.dropzone-file-info.active {
+
+    display:flex;
+
+}
+
+
+
+.dropzone-file-icon {
+
+    width:40px;
+    height:40px;
+    background:#8e44ad;
+    color:white;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+
+
+.dropzone-file-name {
+
+    color:#8e44ad;
+    font-weight:600;
+
+}
+
+
+
+.dropzone-remove {
+
+    width:26px;
+    height:26px;
+    border:none;
+    border-radius:50%;
+    background:#fdeceb;
+    color:#d9362d;
+
+}
+
+
+
+.buttons {
+
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:25px;
+
+}
+
+
+
+.btn-save {
+
+    background:#9b59b6;
+    color:white;
+    border:none;
+    padding:12px 35px;
+    border-radius:10px;
+    font-weight:600;
+
+}
+
+
+
+.btn-cancel {
+
+    background:#fdeceb;
+    color:#d9362d;
+    padding:12px 35px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+
+}
+
+</style>
+
+
+
+<h1 class="page-title">
+    Modifier un formateur
+</h1>
+
+
+
+<div class="breadcrumb">
+
+Accueil /
+<span>Formateurs</span>
+/
+Modifier
+
+</div>
+
+
+
+
+<div class="form-card">
+
+
+<div class="form-header">
+
+
+<div class="header-icon">
+
+<i class="fa fa-user-pen"></i>
+
+</div>
+
+
+
+<div class="header-text">
+
+<h3>
+Informations du formateur
+</h3>
+
+
+<p>
+Modifier les données du formateur
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<form asp-action="Edit"
+      method="post"
+      enctype="multipart/form-data">
+
+
+
+<input type="hidden" asp-for="Id"/>
+
+<input type="hidden" asp-for="ImagePath"/>
+
+
+
+<div asp-validation-summary="ModelOnly"></div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Image formateur
+</label>
+
+
+
+@if(!string.IsNullOrEmpty(Model.ImagePath))
+{
+
+<div class="current-image">
+
+<img src="@Model.ImagePath"
+     class="image-preview"/>
+
+</div>
+
+}
+
+
+
+
+<div class="file-dropzone"
+     id="fileDropzone">
+
+
+
+<input type="file"
+       id="imageInput"
+       name="image"
+       class="file-upload-input"
+       accept=".jpg,.jpeg,.png"/>
+
+
+
+<div id="dropzoneDefault">
+
+
+<div class="dropzone-icon">
+
+<i class="fa fa-cloud-arrow-up"></i>
+
+</div>
+
+
+<div>
+
+Glissez-déposez une image ici ou
+
+<span class="dropzone-link">
+parcourez vos fichiers
+</span>
+
+</div>
+
+
+<div class="dropzone-hint">
+
+PNG, JPG jusqu'à 5 Mo
+
+</div>
+
+
+</div>
+
+
+
+
+<div id="dropzoneFileInfo"
+     class="dropzone-file-info">
+
+
+
+<div class="dropzone-file-icon">
+
+<i class="fa fa-image"></i>
+
+</div>
+
+
+<span id="dropzoneFileName"
+      class="dropzone-file-name">
+</span>
+
+
+
+<button type="button"
+        class="dropzone-remove"
+        onclick="removeFile(event)">
+
+<i class="fa fa-xmark"></i>
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Matricule *
+</label>
+
+<input asp-for="Matricule"
+       class="form-control"/>
+
+<span asp-validation-for="Matricule"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Nom *
+</label>
+
+<input asp-for="LastName"
+       class="form-control"/>
+
+<span asp-validation-for="LastName"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Prénom *
+</label>
+
+<input asp-for="FirstName"
+       class="form-control"/>
+
+<span asp-validation-for="FirstName"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Email *
+</label>
+
+<input asp-for="Email"
+       class="form-control"/>
+
+<span asp-validation-for="Email"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Téléphone *
+</label>
+
+<input asp-for="Phone"
+       class="form-control"/>
+
+<span asp-validation-for="Phone"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Adresse *
+</label>
+
+<input asp-for="Address"
+       class="form-control"/>
+
+<span asp-validation-for="Address"></span>
+
+</div>
+
+
+
+
+<div class="form-group">
+
+<label>
+Type de formateur *
+</label>
+
+
+<select asp-for="TrainerType"
+        class="form-control">
+
+
+<option value="">
+-- Choisir Type --
+</option>
+
+
+<option value="Interne">
+Interne
+</option>
+
+
+<option value="Externe">
+Externe
+</option>
+
+
+</select>
+
+
+<span asp-validation-for="TrainerType"></span>
+
+
+</div>
+
+
+
+
+
+<div class="buttons">
+
+
+<a asp-action="Index"
+   class="btn-cancel">
+
+<i class="fa fa-arrow-left"></i>
+
+Annuler
+
+</a>
+
+
+
+
+<button type="submit"
+        class="btn-save">
+
+<i class="fa fa-save"></i>
+
+Enregistrer
+
+</button>
+
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+@section Scripts {
+
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+
+
+<script>
+
+
+const fileInput=document.getElementById("imageInput");
+
+const dropzone=document.getElementById("fileDropzone");
+
+const dropzoneDefault=document.getElementById("dropzoneDefault");
+
+const dropzoneFileInfo=document.getElementById("dropzoneFileInfo");
+
+const dropzoneFileName=document.getElementById("dropzoneFileName");
+
+
+
+dropzone.onclick=function(){
+
+fileInput.click();
+
+}
+
+
+
+fileInput.onchange=function(){
+
+if(this.files.length>0){
+
+dropzoneDefault.style.display="none";
+
+dropzoneFileInfo.classList.add("active");
+
+dropzoneFileName.textContent=this.files[0].name;
+
+}
+
+}
+
+
+
+function removeFile(event){
+
+event.stopPropagation();
+
+fileInput.value="";
+
+dropzoneDefault.style.display="block";
+
+dropzoneFileInfo.classList.remove("active");
+
+}
+
+
+
+dropzone.addEventListener("dragover",function(e){
+
+e.preventDefault();
+
+});
+
+
+
+dropzone.addEventListener("drop",function(e){
+
+e.preventDefault();
+
+
+if(e.dataTransfer.files.length>0){
+
+fileInput.files=e.dataTransfer.files;
+
+dropzoneDefault.style.display="none";
+
+dropzoneFileInfo.classList.add("active");
+
+dropzoneFileName.textContent=e.dataTransfer.files[0].name;
+
+}
+
+});
+
+
+</script>
+
+}

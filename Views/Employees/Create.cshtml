@@ -232,6 +232,92 @@
         display: none;
     }
 
+
+    .auth-account-card {
+        display: none;
+        margin-top: 6px;
+        margin-bottom: 22px;
+        border: 1px solid #dbe3ff;
+        background: #f7f9ff;
+        border-radius: 14px;
+        padding: 18px;
+    }
+
+        .auth-account-card.visible {
+            display: block;
+        }
+
+    .auth-checkbox-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+    }
+
+    .auth-checkbox {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        accent-color: #14297a;
+        flex-shrink: 0;
+    }
+
+    .auth-checkbox-title {
+        color: #14297a;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .auth-checkbox-text {
+        color: #6b7280;
+        font-size: 12.5px;
+        line-height: 1.5;
+    }
+
+    .auth-details {
+        display: none;
+        margin-top: 15px;
+        padding: 13px 15px;
+        border-radius: 11px;
+        background: white;
+        border: 1px solid #e6eaf5;
+    }
+
+        .auth-details.visible {
+            display: block;
+        }
+
+    .auth-detail-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 5px 0;
+        font-size: 13px;
+    }
+
+    .auth-detail-label {
+        color: #6b7280;
+    }
+
+    .auth-detail-value {
+        color: #14297a;
+        font-weight: 700;
+        word-break: break-all;
+        text-align: right;
+    }
+
+    .auth-password-note {
+        margin-top: 9px;
+        color: #9a6700;
+        background: #fff7df;
+        border: 1px solid #fde6a7;
+        border-radius: 9px;
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
     .buttons {
         display: flex;
         justify-content: flex-end;
@@ -414,10 +500,58 @@
                 </label>
 
                 <input asp-for="Email"
+                       id="employeeEmail"
                        class="form-control"
                        placeholder="email@exemple.com" />
 
                 <span asp-validation-for="Email"></span>
+
+            </div>
+
+
+            <div class="auth-account-card" id="authAccountCard">
+
+                <label class="auth-checkbox-row">
+
+                    <input type="checkbox"
+                           class="auth-checkbox"
+                           id="createAuthenticationAccount"
+                           name="createAuthenticationAccount"
+                           value="true"
+                    @(ViewBag.CreateAuthenticationAccount == true ? "checked" : "") />
+
+                    <span>
+                        <span class="auth-checkbox-title">
+                            Créer un compte d'authentification pour cet employé
+                        </span>
+
+                        <span class="auth-checkbox-text">
+                            L'employé pourra se connecter avec son adresse email.
+                        </span>
+                    </span>
+
+                </label>
+
+
+                <div class="auth-details" id="authDetails">
+
+                    <div class="auth-detail-line">
+                        <span class="auth-detail-label">Email de connexion</span>
+                        <span class="auth-detail-value" id="authEmailPreview">—</span>
+                    </div>
+
+                    <div class="auth-detail-line">
+                        <span class="auth-detail-label">Mot de passe initial</span>
+                        <span class="auth-detail-value">TT@2026</span>
+                    </div>
+
+                    <div class="auth-password-note">
+                        <i class="fa fa-shield-halved"></i>
+                        Le mot de passe sera enregistré sous forme sécurisée.
+                        L'employé devra le modifier lors de sa première connexion.
+                    </div>
+
+                </div>
 
             </div>
 
@@ -486,24 +620,23 @@
 
 
 
-
             <div class="form-group">
 
                 <label>
-                    Service <span style="color:red">*</span>
+                    Domaine <span style="color:red">*</span>
                 </label>
 
-                <select asp-for="ServiceId"
-                        asp-items="ViewBag.Services"
+                <select asp-for="DomainId"
+                        asp-items="ViewBag.Domains"
                         class="form-control">
 
                     <option value="">
-                        -- Choisir Service --
+                        -- Choisir Domaine --
                     </option>
 
                 </select>
 
-                <span asp-validation-for="ServiceId"></span>
+                <span asp-validation-for="DomainId"></span>
 
             </div>
 
@@ -574,16 +707,16 @@
             dropzone.classList.remove("has-file");
         }
 
-        dropzone.addEventListener("dragover", function (e) {
+        dropzone.addEventListener("dragover", function(e) {
             e.preventDefault();
             dropzone.classList.add("dragover");
         });
 
-        dropzone.addEventListener("dragleave", function () {
+        dropzone.addEventListener("dragleave", function() {
             dropzone.classList.remove("dragover");
         });
 
-        dropzone.addEventListener("drop", function (e) {
+        dropzone.addEventListener("drop", function(e) {
             e.preventDefault();
             dropzone.classList.remove("dragover");
 
@@ -592,6 +725,43 @@
                 showFile(e.dataTransfer.files[0]);
             }
         });
+
+
+        // ================= AUTHENTIFICATION EMPLOYE =================
+
+        const employeeEmail = document.getElementById("employeeEmail");
+        const authAccountCard = document.getElementById("authAccountCard");
+        const authCheckbox = document.getElementById("createAuthenticationAccount");
+        const authDetails = document.getElementById("authDetails");
+        const authEmailPreview = document.getElementById("authEmailPreview");
+
+        function updateAuthenticationBox() {
+
+            const email = employeeEmail.value.trim();
+
+            authEmailPreview.textContent = email || "—";
+
+            if (email.length > 0) {
+                authAccountCard.classList.add("visible");
+            }
+            else {
+                authAccountCard.classList.remove("visible");
+                authCheckbox.checked = false;
+                authDetails.classList.remove("visible");
+            }
+
+            if (authCheckbox.checked && email.length > 0) {
+                authDetails.classList.add("visible");
+            }
+            else {
+                authDetails.classList.remove("visible");
+            }
+        }
+
+        employeeEmail.addEventListener("input", updateAuthenticationBox);
+        authCheckbox.addEventListener("change", updateAuthenticationBox);
+
+        updateAuthenticationBox();
 
     </script>
 }

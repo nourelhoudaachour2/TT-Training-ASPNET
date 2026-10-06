@@ -1,0 +1,969 @@
+﻿@model Training_tunisie_telecome.Models.ViewModels.FormationCreateViewModel
+
+@{
+    ViewData["Title"] = "Nouvelle formation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var domainStyles = new[]
+    {
+        new { Bg = "#ecfdf5", Fg = "#059669", Icon = "fa-chart-line" },
+        new { Bg = "#eaf2ff", Fg = "#2563eb", Icon = "fa-laptop-code" },
+        new { Bg = "#f3e8ff", Fg = "#7c3aed", Icon = "fa-bullhorn" },
+        new { Bg = "#fff7ed", Fg = "#ea580c", Icon = "fa-diagram-project" }
+    };
+    int domainIndex = 0;
+}
+
+<style>
+
+    .form-container {
+        max-width: 1180px;
+        margin: auto;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+        .page-header h2 {
+            color: #14297a;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+    .section-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 18px;
+        border: 1px solid #eef0f6;
+        box-shadow: 0 5px 20px rgba(0,0,0,.04);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .section-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .icon-blue {
+        background: #eaf2ff;
+        color: #2563eb;
+    }
+
+    .icon-purple {
+        background: #f3e8ff;
+        color: #7c3aed;
+    }
+
+    .icon-pink {
+        background: #fde7f3;
+        color: #c21872;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        color: #14297a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 16px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .form-control {
+        width: 100%;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #d8dee9;
+        padding: 0 12px;
+        font-size: 13px;
+        background: #fff;
+        color: #1e293b;
+        transition: .15s;
+    }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+        }
+
+    textarea.form-control {
+        height: 100px;
+        padding: 10px 12px;
+        resize: vertical;
+    }
+
+    /* ---------- input with left icon (duration / date / select) ---------- */
+
+    .input-icon-group {
+        position: relative;
+    }
+
+        .input-icon-group .icon-left {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7c3aed;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .input-icon-group .form-control {
+            padding-left: 36px;
+        }
+
+        .input-icon-group .icon-chevron {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .input-icon-group select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 32px;
+        }
+
+    /* ---------- population cible ---------- */
+
+    .population-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .select-all-link {
+        color: #2563eb;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .domains-grid {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 12px;
+    }
+
+    @@media (max-width:900px) {
+        .domains-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+
+    .domain-card {
+        position: relative;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 14px;
+        cursor: pointer;
+        transition: .2s;
+        display: block;
+    }
+
+        .domain-card:hover {
+            border-color: #7c3aed;
+        }
+
+        .domain-card input {
+            display: none;
+        }
+
+        .domain-card.active {
+            background: #eef2ff;
+            border-color: #2563eb;
+        }
+
+    .domain-checkbox {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 1.5px solid #cbd5e1;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #fff;
+    }
+
+    .domain-card.active .domain-checkbox {
+        background: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .domain-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .domain-name {
+        font-weight: 700;
+        font-size: 13px;
+        color: #14297a;
+    }
+
+    .domain-count {
+        font-size: 11.5px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .participants-box {
+        margin-top: 16px;
+        background: #eff6ff;
+        border-radius: 14px;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .participants-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .participants-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    .participants-title {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .participants-subtitle {
+        font-size: 11.5px;
+        color: #64748b;
+        margin-top: 2px;
+    }
+
+    .participants-right {
+        text-align: center;
+    }
+
+    #participantTotal {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1d4ed8;
+        line-height: 1;
+    }
+
+    .participants-label {
+        font-size: 11px;
+        color: #64748b;
+        margin-top: 2px;
+    }
+
+    /* ---------- planification ---------- */
+
+    .days-pill {
+        height: 42px;
+        border-radius: 10px;
+        background: #f3e8ff;
+        color: #7c3aed;
+        font-weight: 700;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+    }
+
+    .radio-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 42px;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .radio-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex: 1 1 0;
+        min-width: 0;
+        border: 1px solid #d8dee9;
+        border-radius: 10px;
+        height: 42px;
+        padding: 0 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+        cursor: pointer;
+        background: #fff;
+    }
+
+        .radio-box input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1.5px solid #b6bfcc;
+            position: relative;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+            .radio-box input:checked {
+                border-color: #7c3aed;
+            }
+
+                .radio-box input:checked::after {
+                    content: "";
+                    position: absolute;
+                    top: 3px;
+                    left: 3px;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #7c3aed;
+                }
+
+        .radio-box:has(input:checked) {
+            border-color: #2563eb;
+            background: #eef2ff;
+            color: #14297a;
+        }
+
+    /* ---------- costs ---------- */
+
+    .costs-grid {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .cost-card {
+        border: 1px solid #eef0f6;
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    .cost-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 13.5px;
+        color: #1e293b;
+        margin-bottom: 12px;
+    }
+
+        .cost-title .cost-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+    .cost-card label {
+        display: block;
+        font-size: 12px;
+        color: #64748b;
+        margin-bottom: 6px;
+    }
+
+    .cost-input-group {
+        display: flex;
+        align-items: stretch;
+        border: 1px solid #d8dee9;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .cost-input-group input {
+            flex: 1;
+            border: none;
+            outline: none;
+            height: 40px;
+            padding: 0 12px;
+            font-size: 13px;
+        }
+
+        .cost-input-group .unit-badge {
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            border-left: 1px solid #d8dee9;
+        }
+
+    .total-cost-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid #eef0f6;
+    }
+
+        .total-cost-card span {
+            color: #64748b;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .total-cost-card strong {
+            color: #14297a;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 6px;
+    }
+
+    .validation-summary {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 18px;
+        font-size: 13px;
+    }
+
+        .validation-summary ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+            .validation-summary:empty,
+            .validation-summary ul:empty {
+                display: none;
+            }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .btn-cancel, .btn-save {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 44px;
+        padding: 0 22px;
+        border-radius: 999px;
+        font-size: 13.5px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-cancel {
+        background: #fde7ea;
+        color: #dc2626;
+    }
+
+    .btn-save {
+        background: #14297a;
+        color: #fff;
+    }
+
+</style>
+
+
+<div class="form-container">
+
+    <div class="page-header">
+        <h2>Nouvelle formation</h2>
+        <p>Formations / Création d'une nouvelle formation</p>
+    </div>
+
+    <div asp-validation-summary="All" class="validation-summary"></div>
+
+
+    <form asp-action="@(ViewContext.RouteData.Values["action"]?.ToString())"
+          asp-route-id="@ViewContext.RouteData.Values["id"]"
+          method="post">
+
+
+        <div class="section-card">
+
+            <div class="section-header">
+                <div class="section-icon icon-blue"><i class="fa fa-circle-info"></i></div>
+                <h3>Informations générales</h3>
+            </div>
+
+            <div class="grid-3">
+
+                <div class="form-group">
+                    <label>ID formation <span class="required">*</span></label>
+                    <input asp-for="Code" class="form-control" placeholder="Ex : F2025-001" />
+                    <span asp-validation-for="Code"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Titre formation <span class="required">*</span></label>
+                    <input asp-for="Title" class="form-control" placeholder="Ex : Excel Avancé" />
+                </div>
+
+                <div class="form-group">
+                    <label>Module <span class="required">*</span></label>
+                    <select asp-for="Module" class="form-control">
+                        <option value="">Sélectionner</option>
+                        <option>Management & Leadership</option>
+                        <option>Informatique</option>
+                        <option>Ressources Humaines</option>
+                        <option>Sécurité</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="grid-2">
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea asp-for="Description" class="form-control" placeholder="Décrivez les objectifs et le contenu de la formation..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Durée (heures)</label>
+                    <div class="input-icon-group">
+                        <i class="fa fa-clock icon-left"></i>
+                        <input asp-for="Duration" type="number" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <div class="population-header">
+                    <label style="margin:0;">Population cible <span class="required">*</span></label>
+                    <span class="select-all-link" id="selectAllDomains"><i class="fa fa-check-double"></i> Tout sélectionner</span>
+                </div>
+
+                <div class="domains-grid">
+                    @foreach (var domain in Model.Domains)
+                    {
+                        var style = domainStyles[domainIndex % domainStyles.Length];
+                        domainIndex++;
+                        var isChecked = Model.SelectedDomains != null && Model.SelectedDomains.Contains(domain.Id);
+                        <label class="domain-card @(isChecked ? "active" : "")" data-count="@domain.EmployeeCount">
+                            <input type="checkbox" name="SelectedDomains" value="@domain.Id" checked="@(isChecked ? "checked" : null)" />
+                            <span class="domain-checkbox"><i class="fa fa-check"></i></span>
+                            <div class="domain-icon" style="background:@style.Bg;color:@style.Fg;">
+                                <i class="fa @style.Icon"></i>
+                            </div>
+                            <div class="domain-name">@domain.Name</div>
+                            <div class="domain-count" style="color:@style.Fg;">@domain.EmployeeCount participants</div>
+                        </label>
+                    }
+                </div>
+
+                <div class="participants-box">
+                    <div class="participants-left">
+                        <div class="participants-icon"><i class="fa fa-users"></i></div>
+                        <div>
+                            <div class="participants-title">Nombre total de participants estimé</div>
+                            <div class="participants-subtitle">Calculé automatiquement selon les domaines sélectionnés</div>
+                        </div>
+                    </div>
+                    <div class="participants-right">
+                        <div id="participantTotal">0</div>
+                        <div class="participants-label">participants</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- ================= PLANIFICATION ================= -->
+
+        <div class="section-card">
+
+            <div class="section-header">
+                <div class="section-icon icon-purple"><i class="fa fa-calendar-days"></i></div>
+                <h3>Planification de la session</h3>
+            </div>
+
+            <div class="grid-3">
+
+                <div class="form-group">
+                    <label>Date de début <span class="required">*</span></label>
+                    <div class="input-icon-group">
+                        <i class="fa fa-calendar icon-left"></i>
+                        <input asp-for="DateStart" type="date" id="dateStart" class="form-control" />
+                        <i class="fa fa-chevron-down icon-chevron"></i>
+                    </div>
+                    <span asp-validation-for="DateStart" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Date de fin <span class="required">*</span></label>
+                    <div class="input-icon-group">
+                        <i class="fa fa-calendar icon-left"></i>
+                        <input asp-for="DateEnd" type="date" id="dateEnd" class="form-control" />
+                        <i class="fa fa-chevron-down icon-chevron"></i>
+                    </div>
+                    <span asp-validation-for="DateEnd" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de jours</label>
+                    <div class="days-pill">
+                        <i class="fa fa-calendar-days"></i>
+                        <span id="daysNumber">0</span> jours
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid-3">
+
+                <div class="form-group">
+                    <label>Type de formation <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-box">
+                            <input type="radio" asp-for="Type" value="Interne" id="typeInterne" /> Interne
+                        </label>
+                        <label class="radio-box">
+                            <input type="radio" asp-for="Type" value="Externe" id="typeExterne" /> Externe
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lieu <span class="required">*</span></label>
+                    <div class="input-icon-group">
+                        <i class="fa fa-location-dot icon-left"></i>
+                        <select asp-for="Location" id="locationSelect" class="form-control">
+                            <option value="">Choisir le lieu</option>
+                            @{
+                                var locationOptions = Model.Type == "Externe" ? Model.Hotels : Model.InternalLocations;
+                            }
+                            @if (Model.Type == "Interne" || Model.Type == "Externe")
+                            {
+                                foreach (var loc in locationOptions)
+                                {
+                                    <option value="@loc" selected="@(loc == Model.Location ? "selected" : null)">@loc</option>
+                                }
+                            }
+                        </select>
+                        <i class="fa fa-chevron-down icon-chevron"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Formateur <span class="required">*</span></label>
+                    <div class="input-icon-group">
+                        <i class="fa fa-chalkboard-user icon-left"></i>
+                        <select asp-for="TrainerId" class="form-control" asp-items="@(new SelectList(Model.Trainers, "Id", "FirstName"))">
+                            <option value="">Choisir un formateur</option>
+                        </select>
+                        <i class="fa fa-chevron-down icon-chevron"></i>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- ================= COUTS ================= -->
+
+        <div class="section-card">
+
+            <div class="section-header">
+                <div class="section-icon icon-pink"><i class="fa fa-wallet"></i></div>
+                <h3>Estimation des coûts</h3>
+            </div>
+
+            <div class="costs-grid">
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon icon-pink"><i class="fa fa-user"></i></span> Formateur</div>
+                    <label>Prix forfaitaire DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="TrainerCost" id="trainerCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon icon-purple"><i class="fa fa-hotel"></i></span> Hébergement</div>
+                    <label>Prix par nuit DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="HotelNightPrice" id="hotelCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon icon-blue"><i class="fa fa-pen"></i></span> Stylo</div>
+                    <label>Prix unitaire DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="PenPrice" id="penCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon" style="background:#ecfdf5;color:#059669;"><i class="fa fa-book"></i></span> Carnet</div>
+                    <label>Prix unitaire DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="NotebookPrice" id="bookCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon" style="background:#fff7ed;color:#ea580c;"><i class="fa fa-bag-shopping"></i></span> Tote Bag</div>
+                    <label>Prix unitaire DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="ToteBagPrice" id="bagCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+                <div class="cost-card">
+                    <div class="cost-title"><span class="cost-icon" style="background:#ecfeff;color:#0891b2;"><i class="fa fa-utensils"></i></span> Ticket resto</div>
+                    <label>Prix / jour DT</label>
+                    <div class="cost-input-group">
+                        <input asp-for="RestaurantTicketPrice" id="mealCost" type="number" step="0.001" />
+                        <span class="unit-badge">DT</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="total-cost-card">
+                <span>Coût total de la formation</span>
+                <strong id="totalCost">0 DT</strong>
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+            <a asp-action="Index" class="btn-cancel"><i class="fa fa-arrow-left"></i> Annuler</a>
+            <button type="submit" class="btn-save"><i class="fa fa-save"></i> Enregistrer la formation</button>
+        </div>
+
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // ================= PARTICIPANTS =================
+
+            document.querySelectorAll(".domain-card").forEach(card => {
+                card.addEventListener("click", function(e) {
+                    let checkbox = this.querySelector("input");
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle("active", checkbox.checked);
+                    calculateParticipants();
+                });
+            });
+
+            function calculateParticipants() {
+                let total = 0;
+                document.querySelectorAll(".domain-card input:checked").forEach(input => {
+                    let card = input.closest(".domain-card");
+                    total += parseInt(card.dataset.count) || 0;
+                });
+                document.getElementById("participantTotal").innerText = total;
+                calculateCost();
+            }
+
+            // ---- purely visual/convenience addition: select all domains ----
+            let selectAllBtn = document.getElementById("selectAllDomains");
+            if (selectAllBtn) {
+                selectAllBtn.addEventListener("click", function() {
+                    document.querySelectorAll(".domain-card").forEach(card => {
+                        let checkbox = card.querySelector("input");
+                        checkbox.checked = true;
+                        card.classList.add("active");
+                    });
+                    calculateParticipants();
+                });
+            }
+
+            // ================= DAYS =================
+
+            function calculateDays() {
+                let start = new Date(document.getElementById("dateStart").value);
+                let end = new Date(document.getElementById("dateEnd").value);
+                let days = 0;
+
+                if (!isNaN(start) && !isNaN(end) && end >= start) {
+                    days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                }
+
+                document.getElementById("daysNumber").innerText = days;
+                calculateCost();
+            }
+
+            document.getElementById("dateStart").addEventListener("change", calculateDays);
+            document.getElementById("dateEnd").addEventListener("change", calculateDays);
+
+            // ================= LOCATION =================
+
+            let location = document.getElementById("locationSelect");
+
+            document.getElementById("typeInterne").addEventListener("change", function() {
+                location.innerHTML = `
+                        <option>Salle Formation Tunis</option>
+                        <option>Salle Formation Nabeul</option>
+                        <option>Salle Formation Sousse</option>
+                        <option>Salle Formation Sfax</option>
+                        `;
+            });
+
+            document.getElementById("typeExterne").addEventListener("change", function() {
+                location.innerHTML = `
+                        <option>Hôtel Africa Tunis</option>
+                        <option>Golden Tulip Gammarth</option>
+                        <option>Laico Hotel Tunis</option>
+                        `;
+            });
+
+            // ================= COST =================
+
+            function calculateCost() {
+                let participants = parseInt(document.getElementById("participantTotal").innerText) || 0;
+                let days = parseInt(document.getElementById("daysNumber").innerText) || 0;
+
+                let trainer = parseFloat(document.getElementById("trainerCost").value) || 0;
+                let hotel = parseFloat(document.getElementById("hotelCost").value) || 0;
+                let pen = parseFloat(document.getElementById("penCost").value) || 0;
+                let book = parseFloat(document.getElementById("bookCost").value) || 0;
+                let bag = parseFloat(document.getElementById("bagCost").value) || 0;
+                let meal = parseFloat(document.getElementById("mealCost").value) || 0;
+
+                let total =
+                    (trainer)
+                    +
+                    (hotel * days * participants)
+                    +
+                    ((pen + book + bag) * participants)
+                    +
+                    (meal * participants * days);
+
+                document.getElementById("totalCost").innerText =
+                    total.toLocaleString("fr-FR", { minimumFractionDigits: 3 }) + " DT";
+            }
+
+            document.querySelectorAll(".cost-card input").forEach(input => {
+                input.addEventListener("input", calculateCost);
+            });
+
+            document.querySelectorAll(".domain-card").forEach(card => {
+                let cb = card.querySelector("input");
+                if (cb.checked) card.classList.add("active");
+            });
+
+            calculateParticipants();
+            calculateDays();
+            calculateCost();
+
+        });
+
+    </script>
+
+}

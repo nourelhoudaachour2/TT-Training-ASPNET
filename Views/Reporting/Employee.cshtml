@@ -1,0 +1,622 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.ViewModels.EmployeeReportViewModel>
+
+@{
+    ViewData["Title"] = "Rapport Employés";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var genereLe = DateTime.Now.ToString("dd MMM yyyy 'à' HH:mm");
+}
+
+<!-- Bootstrap Icons (si déjà inclus dans _Layout.cshtml, cette ligne peut être supprimée) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+    .rapport-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .rapport-header h2 {
+            font-weight: 700;
+            color: var(--tt-navy, #1b2b52);
+            margin-bottom: 4px;
+        }
+
+        .rapport-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    .rapport-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-rapport {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .15s ease;
+    }
+
+        .btn-rapport i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .btn-rapport:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn-rapport.pdf {
+            color: #b91c1c;
+        }
+
+        .btn-rapport.excel {
+            color: #15803d;
+        }
+
+    .rapport-meta {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        background: #eef1fb;
+        color: var(--tt-mauve, #6c4a8e);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+        .meta-chip i {
+            font-size: 0.9rem;
+        }
+
+    .rapport-toolbar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+    }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+    .toolbar-select {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        font-size: 0.9rem;
+        background: #fff;
+        color: #374151;
+        min-width: 170px;
+    }
+
+    .rapport-table-card {
+        background: #fff;
+        border: 1px solid #eef0f4;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table.rapport-table {
+        width: 100%;
+        min-width: 950px;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+        table.rapport-table thead th {
+            background: #fafbfc;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #eef0f4;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+            table.rapport-table thead th .sort-arrow {
+                opacity: 0.35;
+                font-size: 0.75rem;
+                margin-left: 4px;
+            }
+
+        table.rapport-table tbody td {
+            padding: 14px 18px;
+            font-size: 0.9rem;
+            color: #1f2937;
+            border-bottom: 1px solid #f4f5f7;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+            table.rapport-table tbody td:nth-child(2) {
+                white-space: normal;
+                min-width: 160px;
+            }
+
+        table.rapport-table thead th:nth-child(4),
+        table.rapport-table thead th:nth-child(5) {
+            text-align: center;
+        }
+
+        table.rapport-table tbody td:nth-child(4),
+        table.rapport-table tbody td:nth-child(5) {
+            text-align: center;
+        }
+
+        table.rapport-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.rapport-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        table.rapport-table td.icon-cell i {
+            color: #9ca3af;
+            margin-right: 4px;
+        }
+
+    .badge-domaine {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 500;
+    }
+
+        .badge-domaine.dom-it {
+            background: #e6edfb;
+            color: #2451c9;
+        }
+
+        .badge-domaine.dom-reseaux {
+            background: #e3f7ec;
+            color: #16965a;
+        }
+
+        .badge-domaine.dom-marketing {
+            background: #f3e8fa;
+            color: var(--tt-mauve, #8c3fae);
+        }
+
+        .badge-domaine.dom-finance {
+            background: #fdf1e0;
+            color: #b8720a;
+        }
+
+        .badge-domaine.dom-default {
+            background: #eef0f4;
+            color: #4b5563;
+        }
+
+    .taux-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+        .taux-pill.taux-high {
+            background: #e3f7ec;
+            color: #16965a;
+        }
+
+        .taux-pill.taux-mid {
+            background: #fdf1e0;
+            color: #b8720a;
+        }
+
+        .taux-pill.taux-low {
+            background: #fdecec;
+            color: #c0392b;
+        }
+
+    .rapport-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        border-top: 1px solid #eef0f4;
+        font-size: 0.85rem;
+        color: #6b7280;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .pagination-controls button {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .pagination-controls button.active {
+                background: var(--tt-navy, #1b2b52);
+                color: #fff;
+                border-color: var(--tt-navy, #1b2b52);
+            }
+
+    .rapport-info {
+        margin-top: 14px;
+        padding: 12px 16px;
+        background: #f4f7fd;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #4b5563;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .rapport-info i {
+            color: var(--tt-mauve, #6c4a8e);
+        }
+
+    .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+        .no-results i {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+</style>
+
+<div class="rapport-header">
+    <div>
+        <h2>Rapport Employés</h2>
+        <p>Suivi des formations, présence et progression des employés</p>
+    </div>
+    <div class="rapport-actions">
+        <button type="button" class="btn-rapport pdf" id="btnExportPdf"><i class="bi bi-file-earmark-pdf"></i> Exporter PDF</button>
+        <button type="button" class="btn-rapport excel" id="btnExportExcel"><i class="bi bi-file-earmark-excel"></i> Exporter Excel</button>
+        <button type="button" class="btn-rapport" onclick="window.print()"><i class="bi bi-printer"></i> Imprimer</button>
+    </div>
+</div>
+
+<div class="rapport-meta">
+    <span class="meta-chip"><i class="bi bi-gear"></i> Généré automatiquement</span>
+    <span class="meta-chip"><i class="bi bi-calendar3"></i> @genereLe</span>
+    <span class="meta-chip" id="lignesChip"><i class="bi bi-list-ul"></i> @Model.Count() lignes</span>
+</div>
+
+<div class="rapport-toolbar">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" id="rapportSearch" placeholder="Rechercher dans le rapport..." />
+    </div>
+    <select class="toolbar-select" id="sortSelect">
+        <option value="matricule-asc">Trier par : Matricule (A → Z)</option>
+        <option value="nom-asc">Trier par : Nom (A → Z)</option>
+        <option value="formations-desc">Trier par : Formations (décroissant)</option>
+        <option value="heures-desc">Trier par : Heures (décroissant)</option>
+        <option value="taux-desc">Trier par : Taux présence (décroissant)</option>
+        <option value="taux-asc">Trier par : Taux présence (croissant)</option>
+    </select>
+    <select class="toolbar-select" id="filterDomaine">
+        <option value="">Filtres : tous les domaines</option>
+    </select>
+</div>
+
+<div class="rapport-table-card">
+    <div class="table-scroll">
+        <table class="rapport-table" id="rapportTable">
+            <thead>
+                <tr>
+                    <th data-key="matricule">Matricule <span class="sort-arrow">⇅</span></th>
+                    <th data-key="nom">Nom <span class="sort-arrow">⇅</span></th>
+                    <th data-key="domaine">Domaine <span class="sort-arrow">⇅</span></th>
+                    <th data-key="formations">Formations suivies <span class="sort-arrow">⇅</span></th>
+                    <th data-key="heures">Heures de formation <span class="sort-arrow">⇅</span></th>
+                    <th data-key="taux">Taux de présence <span class="sort-arrow">⇅</span></th>
+                    <th data-key="derniere">Dernière formation <span class="sort-arrow">⇅</span></th>
+                </tr>
+            </thead>
+            <tbody id="rapportBody">
+                @foreach (var e in Model)
+                {
+                    var nomDom = e.Domain ?? "";
+                    var cssClass = "dom-default";
+                    if (nomDom.Contains("IT") || nomDom.Contains("Technologies")) { cssClass = "dom-it"; }
+                    else if (nomDom.Contains("Réseaux") || nomDom.Contains("Reseaux")) { cssClass = "dom-reseaux"; }
+                    else if (nomDom.Contains("Marketing") || nomDom.Contains("Communication") || nomDom.Contains("vente")) { cssClass = "dom-marketing"; }
+                    else if (nomDom.Contains("Finance") || nomDom.Contains("Gestion")) { cssClass = "dom-finance"; }
+
+                    var tauxClass = e.AttendanceRate >= 80 ? "taux-high" : e.AttendanceRate >= 50 ? "taux-mid" : "taux-low";
+                    var tauxIcon = e.AttendanceRate >= 80 ? "bi-check-circle" : e.AttendanceRate >= 50 ? "bi-exclamation-circle" : "bi-x-circle";
+                    var derniereIso = e.LastFormation.HasValue ? e.LastFormation.Value.ToString("yyyy-MM-dd") : "";
+                    var derniereAffiche = e.LastFormation.HasValue ? e.LastFormation.Value.ToString("dd MMM yyyy") : "Aucune";
+
+                    <tr class="rapport-row"
+                        data-matricule="@e.Matricule"
+                        data-nom="@e.FullName"
+                        data-domaine="@nomDom"
+                        data-formations="@e.FormationCount"
+                        data-heures="@e.TrainingHours"
+                        data-taux="@e.AttendanceRate"
+                        data-derniere="@derniereIso">
+                        <td>@e.Matricule</td>
+                        <td>@e.FullName</td>
+                        <td><span class="badge-domaine @cssClass">@nomDom</span></td>
+                        <td class="icon-cell"><i class="bi bi-mortarboard"></i>@e.FormationCount</td>
+                        <td class="icon-cell"><i class="bi bi-clock"></i>@e.TrainingHours h</td>
+                        <td><span class="taux-pill @tauxClass"><i class="bi @tauxIcon"></i>@e.AttendanceRate.ToString("0.#")%</span></td>
+                        <td class="icon-cell"><i class="bi bi-calendar-check"></i>@derniereAffiche</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="no-results" id="noResults" style="display:none;">
+        <i class="bi bi-inbox"></i>
+        Aucun résultat trouvé.
+    </div>
+
+    <div class="rapport-footer">
+        <span id="paginationInfo">Affichage de 1 à @Model.Count() sur @Model.Count() lignes</span>
+        <div class="pagination-controls" id="paginationControls"></div>
+        <div>
+            Lignes par page :
+            <select class="toolbar-select" id="pageSizeSelect" style="min-width:80px; padding:6px 10px;">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="9999">Tout</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="rapport-info">
+    <i class="bi bi-info-circle"></i>
+    Ce rapport est généré automatiquement à partir des données disponibles dans le système.
+</div>
+
+@section Scripts {
+    <!-- Génération PDF (tableau réel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <!-- Génération Excel réel (.xlsx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        (function() {
+            const searchInput = document.getElementById('rapportSearch');
+            const sortSelect = document.getElementById('sortSelect');
+            const filterDomaine = document.getElementById('filterDomaine');
+            const pageSizeSelect = document.getElementById('pageSizeSelect');
+            const tbody = document.getElementById('rapportBody');
+            const noResults = document.getElementById('noResults');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
+            const lignesChip = document.getElementById('lignesChip');
+
+            let allRows = Array.from(tbody.querySelectorAll('tr.rapport-row'));
+            let currentPage = 1;
+
+            // Remplit dynamiquement les options du filtre Domaine
+            const domaines = [...new Set(allRows.map(r => r.dataset.domaine).filter(Boolean))];
+            domaines.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                filterDomaine.appendChild(opt);
+            });
+
+            function getFiltered() {
+                const term = searchInput.value.trim().toLowerCase();
+                const dom = filterDomaine.value;
+                return allRows.filter(r => {
+                    const matchesSearch = !term || r.textContent.toLowerCase().includes(term);
+                    const matchesDomaine = !dom || r.dataset.domaine === dom;
+                    return matchesSearch && matchesDomaine;
+                });
+            }
+
+            function getSorted(rows) {
+                const [key, dir] = sortSelect.value.split('-');
+                const dsKey = key === 'matricule' ? 'matricule'
+                    : key === 'nom' ? 'nom'
+                        : key === 'formations' ? 'formations'
+                            : key === 'heures' ? 'heures'
+                                : key === 'taux' ? 'taux'
+                                    : key === 'derniere' ? 'derniere'
+                                        : 'matricule';
+
+                const numeric = ['formations', 'heures', 'taux'].includes(dsKey);
+
+                const sorted = [...rows].sort((a, b) => {
+                    let va = a.dataset[dsKey];
+                    let vb = b.dataset[dsKey];
+                    if (numeric) {
+                        return (parseFloat(va) || 0) - (parseFloat(vb) || 0);
+                    }
+                    return String(va).localeCompare(String(vb));
+                });
+                if (dir === 'desc') sorted.reverse();
+                return sorted;
+            }
+
+            // Extrait les données propres (sans HTML/icônes) pour les exports
+            function getRowsData(rows) {
+                return rows.map(r => ({
+                    matricule: r.dataset.matricule,
+                    nom: r.dataset.nom,
+                    domaine: r.dataset.domaine,
+                    formations: r.dataset.formations,
+                    heures: r.dataset.heures,
+                    taux: r.dataset.taux + '%',
+                    derniere: r.dataset.derniere ? r.dataset.derniere : 'Aucune'
+                }));
+            }
+
+            function render() {
+                const filtered = getSorted(getFiltered());
+                const pageSize = parseInt(pageSizeSelect.value);
+                const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                allRows.forEach(r => r.style.display = 'none');
+
+                const start = (currentPage - 1) * pageSize;
+                const pageRows = filtered.slice(start, start + pageSize);
+                pageRows.forEach(r => { r.style.display = ''; tbody.appendChild(r); });
+
+                noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+                lignesChip.innerHTML = '<i class="bi bi-list-ul"></i> ' + filtered.length + ' lignes';
+
+                const from = filtered.length === 0 ? 0 : start + 1;
+                const to = Math.min(start + pageSize, filtered.length);
+                paginationInfo.textContent = `Affichage de ${from} à ${to} sur ${filtered.length} lignes`;
+
+                paginationControls.innerHTML = '';
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.onclick = () => { currentPage--; render(); };
+                paginationControls.appendChild(prevBtn);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = p;
+                    if (p === currentPage) btn.classList.add('active');
+                    btn.onclick = () => { currentPage = p; render(); };
+                    paginationControls.appendChild(btn);
+                }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.onclick = () => { currentPage++; render(); };
+                paginationControls.appendChild(nextBtn);
+            }
+
+            searchInput.addEventListener('input', () => { currentPage = 1; render(); });
+            sortSelect.addEventListener('change', () => { currentPage = 1; render(); });
+            filterDomaine.addEventListener('change', () => { currentPage = 1; render(); });
+            pageSizeSelect.addEventListener('change', () => { currentPage = 1; render(); });
+
+            // ---- Export PDF réel (tableau, pas une capture d'écran) ----
+            document.getElementById('btnExportPdf').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+                doc.setFontSize(16);
+                doc.setTextColor(27, 43, 82); // navy
+                doc.text('Rapport Employés', 40, 40);
+
+                doc.setFontSize(10);
+                doc.setTextColor(107, 114, 128);
+                doc.text('Généré le ' + '@genereLe', 40, 58);
+
+                const data = getRowsData(getSorted(getFiltered()));
+
+                doc.autoTable({
+                    startY: 75,
+                    head: [['Matricule', 'Nom', 'Domaine', 'Formations', 'Heures', 'Taux présence', 'Dernière formation']],
+                    body: data.map(d => [d.matricule, d.nom, d.domaine, d.formations, d.heures + ' h', d.taux, d.derniere]),
+                    styles: { fontSize: 9, cellPadding: 6 },
+                    headStyles: { fillColor: [27, 43, 82], textColor: 255, fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [249, 250, 251] },
+                    margin: { left: 40, right: 40 }
+                });
+
+                doc.save('rapport_employes.pdf');
+            });
+
+            // ---- Export Excel réel (.xlsx, pas un CSV) ----
+            document.getElementById('btnExportExcel').addEventListener('click', function() {
+                const data = getRowsData(getSorted(getFiltered()));
+
+                const wsData = [
+                    ['Matricule', 'Nom', 'Domaine', 'Formations', 'Heures', 'Taux présence', 'Dernière formation'],
+                    ...data.map(d => [d.matricule, d.nom, d.domaine, d.formations, d.heures + ' h', d.taux, d.derniere])
+                ];
+
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                ws['!cols'] = [
+                    { wch: 12 }, { wch: 25 }, { wch: 18 }, { wch: 14 }, { wch: 10 }, { wch: 14 }, { wch: 18 }
+                ];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Employés');
+
+                XLSX.writeFile(wb, 'rapport_employes.xlsx');
+            });
+
+            render();
+        })();
+    </script>
+}

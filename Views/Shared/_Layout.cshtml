@@ -1,5 +1,14 @@
-﻿@{
+﻿@using Microsoft.EntityFrameworkCore
+@using Training_tunisie_telecome.Data
+
+@inject AppDbContext _context
+
+@{
     Layout = null;
+
+    var pendingAbsences = await _context.SessionParticipants
+        .CountAsync(p => p.AbsenceStatus == "En attente"
+                      && p.JustificationFile != null);
 }
 
 <!DOCTYPE html>
@@ -35,6 +44,7 @@
 
 
 
+
             /* ================= SIDEBAR ================= */
 
 
@@ -53,6 +63,7 @@
 
 
 
+
             /* LOGO */
 
 
@@ -64,6 +75,7 @@
                 padding: 0 4px 14px 0;
                 border-bottom: 1px solid #f0edf5;
             }
+
 
 
 
@@ -100,7 +112,7 @@
                     color: #4a4a55;
                     font-size: 15px;
                     font-weight: 500;
-                    transition: 0.2s;
+                    transition: .2s;
                 }
 
 
@@ -111,8 +123,8 @@
                         width: 20px;
                         text-align: center;
                         font-size: 17px;
-                        opacity: 0.9;
-                        transition: 0.3s;
+                        opacity: .9;
+                        transition: .3s;
                     }
 
 
@@ -127,12 +139,9 @@
                     }
 
 
-
                     .menu a:nth-child(2) i {
                         color: #0099cc;
                     }
-
-
 
 
                     .menu a:nth-child(3) i {
@@ -140,33 +149,19 @@
                     }
 
 
-
-
                     .menu a:nth-child(4) i {
-                        color: #009b72;
-                    }
-
-
-
-
-                    .menu a:nth-child(5) i {
                         color: #e6007e;
                     }
 
 
-
-
-                    .menu a:nth-child(6) i {
+                    .menu a:nth-child(5) i {
                         color: #ff8c00;
                     }
 
 
-
-
-                    .menu a:nth-child(7) i {
+                    .menu a:nth-child(6) i {
                         color: #7b2cbf;
                     }
-
 
 
 
@@ -208,7 +203,7 @@
                 font-size: 15px;
                 border-radius: 10px;
                 cursor: pointer;
-                transition: 0.2s;
+                transition: .2s;
             }
 
 
@@ -222,10 +217,13 @@
 
 
 
+
                 .logout:hover {
                     background: #d9362d;
                     color: white;
                 }
+
+
 
 
 
@@ -254,8 +252,10 @@
                 align-items: center;
                 padding: 0 28px;
                 border-bottom: 1px solid #ececf3;
-                box-shadow: 0 2px 10px rgba(60,24,87,0.03);
+                box-shadow: 0 2px 10px rgba(60,24,87,.03);
             }
+
+
 
 
 
@@ -266,6 +266,7 @@
                 align-items: center;
                 gap: 16px;
             }
+
 
 
 
@@ -323,7 +324,6 @@
 
 
 
-
                 .user-info img {
                     width: 42px;
                     height: 42px;
@@ -343,6 +343,37 @@
 
             .content {
                 padding: 28px;
+            }
+
+    
+            .notification-link {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: #f7f7fb;
+                border: 1px solid #ececf3;
+                color: #14297a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                position: relative;
+            }
+
+            .notification-badge {
+                position: absolute;
+                top: -6px;
+                right: -6px;
+                min-width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: #e6007e;
+                color: white;
+                font-size: 10px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
     </style>
@@ -369,17 +400,20 @@
 
 
 
+
         <div class="menu">
 
 
+            <a asp-controller="Dashboard" asp-action="Index">
 
-            <a href="/Dashboard">
+            
 
                 <i class="fa fa-gauge"></i>
 
                 Dashboard
 
             </a>
+
 
 
 
@@ -395,7 +429,8 @@
 
 
 
-            <a href="/Formateurs">
+
+            <a asp-controller="Formateurs" asp-action="Index">
 
                 <i class="fa fa-chalkboard-user"></i>
 
@@ -406,18 +441,8 @@
 
 
 
-            <a asp-controller="Services" asp-action="Index">
 
-                <i class="fa fa-building"></i>
-
-                Services
-
-            </a>
-
-
-
-
-            <a href="/Formations">
+            <a asp-controller="Formations" asp-action="Index">
 
                 <i class="fa fa-graduation-cap"></i>
 
@@ -428,8 +453,9 @@
 
 
 
-            <a href="/Attendances">
+            <a asp-controller="Attendance" asp-action="Index">
 
+            
                 <i class="fa fa-calendar"></i>
 
                 Présence
@@ -438,8 +464,7 @@
 
 
 
-
-            <a href="/Reporting">
+            <a href="/Reporting/Index">
 
                 <i class="fa fa-chart-line"></i>
 
@@ -456,7 +481,10 @@
 
 
 
-        <a href="/Auth/Logout" class="logout" style="text-decoration:none;">
+
+        <a href="/Auth/Logout"
+           class="logout"
+           style="text-decoration:none;">
 
 
             <i class="fa fa-right-from-bracket"></i>
@@ -469,6 +497,7 @@
 
 
     </div>
+
 
 
 
@@ -489,7 +518,9 @@
                 <i class="fa fa-bars"></i>
 
 
-                <h3>@ViewData["Title"]</h3>
+                <h3>
+                    @ViewData["Title"]
+                </h3>
 
 
             </div>
@@ -498,7 +529,25 @@
 
 
 
+
+
             <div class="topbar-right">
+
+
+                <a asp-controller="Dashboard"
+                   asp-action="Absences"
+                   class="notification-link">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    @if (pendingAbsences > 0)
+                    {
+                        <span class="notification-badge">
+                            @pendingAbsences
+                        </span>
+                    }
+
+                </a>
 
 
 
@@ -532,6 +581,7 @@
 
 
 
+
         <div class="content">
 
 
@@ -543,6 +593,15 @@
 
 
     </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+    
 
 
 

@@ -1,7 +1,7 @@
-﻿@model Training_tunisie_telecome.Models.Employee
+﻿@model Training_tunisie_telecome.Models.Trainer
 
 @{
-    ViewData["Title"] = "Détails Employé";
+    ViewData["Title"] = "Détails Formateur";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,6 +15,7 @@
         box-shadow: 0 5px 25px rgba(0,0,0,.05);
     }
 
+
     .profile-header {
         display: flex;
         align-items: center;
@@ -23,6 +24,7 @@
         border-bottom: 1px solid #eeeeee;
     }
 
+
     .profile-image img,
     .profile-image i {
         width: 130px;
@@ -30,9 +32,11 @@
         border-radius: 50%;
     }
 
+
     .profile-image img {
         object-fit: cover;
     }
+
 
     .profile-image i {
         background: #e8edff;
@@ -43,6 +47,7 @@
         font-size: 45px;
     }
 
+
     .profile-info h2 {
         color: #14297a;
         font-size: 22px;
@@ -50,7 +55,9 @@
         margin-bottom: 10px;
     }
 
-    .employee-badge {
+
+
+    .trainer-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -62,12 +69,17 @@
         font-size: 13px;
     }
 
+
+
     .profile-description {
         margin-top: 12px;
         color: #6b7280;
         font-size: 14px;
         line-height: 1.6;
     }
+
+
+
 
     .section-title {
         display: flex;
@@ -78,6 +90,8 @@
         font-size: 16px;
         font-weight: 700;
     }
+
+
 
     .section-icon {
         width: 30px;
@@ -90,11 +104,17 @@
         font-size: 13px;
     }
 
+
+
+
+
     .info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0 60px;
     }
+
+
 
     .info-item {
         display: flex;
@@ -104,11 +124,15 @@
         border-bottom: 1px solid #eeeeee;
     }
 
+
+
     .info-left {
         display: flex;
         align-items: center;
         gap: 12px;
     }
+
+
 
     .info-icon {
         width: 28px;
@@ -122,17 +146,46 @@
         font-size: 12px;
     }
 
+
+
     .info-label {
         font-weight: 600;
         color: #374151;
         font-size: 13px;
     }
 
+
+
     .info-value {
         color: black;
-        font-weight: 400;
         font-size: 13px;
     }
+
+
+
+    .type-interne {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+
+    .type-externe {
+        background: #fef3c7;
+        color: #b45309;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+
+
 
     .btn-back {
         display: inline-flex;
@@ -149,6 +202,7 @@
         font-size: 13px;
     }
 
+
         .btn-back:hover {
             background: #f3f4f6;
         }
@@ -157,57 +211,81 @@
 
 
 
+
+
 <div class="details-container">
+
 
 
     <div class="profile-header">
 
 
+
         <div class="profile-image">
+
 
             @if (!string.IsNullOrEmpty(Model.ImagePath))
             {
+
                 <img src="@Model.ImagePath" />
+
             }
             else
             {
+
                 <i class="fa fa-user"></i>
+
             }
+
 
         </div>
 
 
 
+
+
         <div class="profile-info">
+
 
             <h2>
                 @Model.FirstName @Model.LastName
             </h2>
 
 
-            <div class="employee-badge">
 
-                <i class="fa fa-user"></i>
+            <div class="trainer-badge">
 
-                Employé
+                <i class="fa fa-chalkboard-user"></i>
+
+                Formateur
 
             </div>
+
 
 
 
             <div class="profile-description">
 
-                Employé du domaine
-                <strong>@Model.Domain?.Name</strong>.
+
+                Formateur de type :
+
+                <strong>
+                    @Model.TrainerType
+                </strong>
+
 
                 <br />
 
-                Membre de l'équipe.
+
+                Participe à l'animation et au développement des compétences.
+
 
             </div>
 
 
+
         </div>
+
 
 
     </div>
@@ -215,7 +293,12 @@
 
 
 
+
+
+
+
     <div class="section-title">
+
 
         <div class="section-icon">
 
@@ -233,10 +316,17 @@
 
 
 
+
+
+
     <div class="info-grid">
 
 
+
+
+
         <div>
+
 
 
             <div class="info-item">
@@ -252,6 +342,7 @@
                         Matricule
                     </span>
 
+
                 </div>
 
 
@@ -261,6 +352,8 @@
 
 
             </div>
+
+
 
 
 
@@ -279,6 +372,7 @@
                         Email
                     </span>
 
+
                 </div>
 
 
@@ -288,6 +382,8 @@
 
 
             </div>
+
+
 
 
 
@@ -306,11 +402,12 @@
                         Téléphone
                     </span>
 
+
                 </div>
 
 
                 <span class="info-value">
-                    @Model.PhoneNumber
+                    @Model.Phone
                 </span>
 
 
@@ -319,6 +416,10 @@
 
 
         </div>
+
+
+
+
 
 
 
@@ -334,50 +435,26 @@
                 <div class="info-left">
 
                     <div class="info-icon">
-                        <i class="fa fa-award"></i>
-                    </div>
-
-
-                    <span class="info-label">
-                        Grade
-                    </span>
-
-                </div>
-
-
-                <span class="info-value">
-                    @Model.Grade
-                </span>
-
-
-            </div>
-
-
-
-
-
-            <div class="info-item">
-
-                <div class="info-left">
-
-                    <div class="info-icon">
                         <i class="fa fa-house"></i>
                     </div>
 
 
                     <span class="info-label">
-                        Résidence
+                        Adresse
                     </span>
+
 
                 </div>
 
 
                 <span class="info-value">
-                    @Model.Residence
+                    @Model.Address
                 </span>
 
 
             </div>
+
+
 
 
 
@@ -388,19 +465,66 @@
                 <div class="info-left">
 
                     <div class="info-icon">
-                        <i class="fa fa-building"></i>
+                        <i class="fa fa-user-tag"></i>
                     </div>
 
 
                     <span class="info-label">
-                        Domaine
+                        Type
                     </span>
+
+
+                </div>
+
+
+
+                @if (Model.TrainerType == "Interne")
+                {
+
+                    <span class="type-interne">
+                        Interne
+                    </span>
+
+                }
+                else
+                {
+
+                    <span class="type-externe">
+                        Externe
+                    </span>
+
+                }
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="info-item">
+
+                <div class="info-left">
+
+                    <div class="info-icon">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+
+
+                    <span class="info-label">
+                        Nombre formations
+                    </span>
+
 
                 </div>
 
 
                 <span class="info-value">
-                    @Model.Domain?.Name
+
+                    @(Model.Sessions?.Count ?? 0)
+
                 </span>
 
 
@@ -408,7 +532,11 @@
 
 
 
+
+
         </div>
+
+
 
 
 
@@ -418,14 +546,22 @@
 
 
 
+
+
+
     <a asp-action="Index"
        class="btn-back">
 
+
         <i class="fa fa-arrow-left"></i>
+
 
         Retour à la liste
 
+
     </a>
+
+
 
 
 

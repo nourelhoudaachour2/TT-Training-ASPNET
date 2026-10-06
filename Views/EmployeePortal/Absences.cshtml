@@ -1,0 +1,454 @@
+﻿@model Training_tunisie_telecome.Models.ViewModels.EmployeeAbsencesPageViewModel
+
+@{
+    Layout = "_EmployeeLayout";
+    ViewData["Title"] = "Mes absences";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --tt-navy: #14297a;
+            --tt-navy-light: #eef1fb;
+            --tt-pink: #e6007e;
+            --tt-purple: #7b2cbf;
+            --tt-bg: #f4f3f9;
+            --tt-surface: #ffffff;
+            --tt-text: #1f2438;
+            --tt-text-muted: #7a7f97;
+            --tt-danger: #e0284f;
+            --tt-danger-bg: #fdeaee;
+            --tt-success: #17a06c;
+            --tt-success-bg: #e7f8f1;
+            --tt-warning: #d99000;
+            --tt-warning-bg: #fff6df;
+            --tt-radius: 16px;
+            --tt-radius-sm: 10px;
+            --tt-shadow: 0 8px 24px rgba(20,41,122,.06);
+        }
+
+        .tt-page-head {
+            margin-bottom: 26px;
+        }
+
+            .tt-page-head h2 {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 24px;
+                font-weight: 800;
+                letter-spacing: -.01em;
+                color: var(--tt-text);
+            }
+
+            .tt-page-head .tt-icon-badge {
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                background: var(--tt-danger-bg);
+                color: var(--tt-danger);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+            }
+
+            .tt-page-head p {
+                margin-top: 4px;
+                color: var(--tt-text-muted);
+                font-size: 14px;
+            }
+
+        .tt-alert {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: var(--tt-radius-sm);
+            padding: 14px 18px;
+            font-size: 13.5px;
+            font-weight: 550;
+            margin-bottom: 20px;
+        }
+
+        .tt-alert-success {
+            background: var(--tt-success-bg);
+            color: var(--tt-success);
+        }
+
+        .tt-alert-danger {
+            background: var(--tt-danger-bg);
+            color: var(--tt-danger);
+        }
+
+        .tt-empty {
+            background: var(--tt-surface);
+            border-radius: var(--tt-radius);
+            box-shadow: var(--tt-shadow);
+            text-align: center;
+            padding: 64px 24px;
+        }
+
+            .tt-empty i {
+                font-size: 40px;
+                color: var(--tt-success);
+                margin-bottom: 16px;
+            }
+
+            .tt-empty h5 {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--tt-text);
+                margin-bottom: 6px;
+            }
+
+            .tt-empty p {
+                color: var(--tt-text-muted);
+                font-size: 13.5px;
+            }
+
+        .tt-abs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 18px;
+        }
+
+        .tt-abs-card {
+            background: var(--tt-surface);
+            border-radius: var(--tt-radius);
+            box-shadow: var(--tt-shadow);
+            padding: 22px;
+        }
+
+        .tt-abs-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tt-abs-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--tt-text);
+        }
+
+            .tt-abs-title i {
+                color: var(--tt-navy);
+                font-size: 15px;
+            }
+
+        .tt-abs-date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--tt-text-muted);
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 24px;
+        }
+
+        .tt-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tt-pill-danger {
+            background: var(--tt-danger-bg);
+            color: var(--tt-danger);
+        }
+
+        .tt-pill-warning {
+            background: var(--tt-warning-bg);
+            color: var(--tt-warning);
+        }
+
+        .tt-pill-success {
+            background: var(--tt-success-bg);
+            color: var(--tt-success);
+        }
+
+        .tt-pill-muted {
+            background: #f1f1f6;
+            color: var(--tt-text-muted);
+        }
+
+        .tt-status-box {
+            background: var(--tt-bg);
+            border-radius: var(--tt-radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+
+        .tt-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tt-status-label {
+            font-size: 12.5px;
+            color: var(--tt-text-muted);
+            font-weight: 600;
+        }
+
+        .tt-status-sent {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tt-success);
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .tt-upload-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--tt-text);
+            margin-bottom: 8px;
+        }
+
+        .tt-upload-zone {
+            border: 1.5px dashed #d7d9e8;
+            border-radius: var(--tt-radius-sm);
+            padding: 10px 12px;
+            margin-bottom: 14px;
+            transition: .18s ease;
+        }
+
+            .tt-upload-zone:focus-within,
+            .tt-upload-zone:hover {
+                border-color: var(--tt-navy);
+                background: var(--tt-navy-light);
+            }
+
+            .tt-upload-zone input[type="file"] {
+                width: 100%;
+                border: none;
+                background: transparent;
+                font-size: 13px;
+                color: var(--tt-text-muted);
+            }
+
+        .tt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 13.5px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .18s ease;
+        }
+
+        .tt-btn-danger {
+            background: var(--tt-danger);
+            color: #fff;
+        }
+
+            .tt-btn-danger:hover {
+                background: #c11f42;
+            }
+
+        .tt-btn-disabled {
+            background: #f1f1f6;
+            color: var(--tt-text-muted);
+            cursor: not-allowed;
+        }
+    </style>
+}
+
+<div class="tt-page-head">
+    <h2>
+        <span class="tt-icon-badge"><i class="fa-solid fa-calendar-xmark"></i></span>
+        Mes absences
+    </h2>
+    <p>Suivez vos absences et envoyez vos justificatifs.</p>
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="tt-alert tt-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="tt-alert tt-alert-danger">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        @TempData["Error"]
+    </div>
+}
+
+
+@if (Model.Absences == null || !Model.Absences.Any())
+{
+    <div class="tt-empty">
+
+        <i class="fa-solid fa-calendar-check"></i>
+
+        <h5>
+            Aucune absence enregistrée
+        </h5>
+
+        <p>
+            Vous n'avez aucune absence à justifier.
+        </p>
+
+    </div>
+}
+else
+{
+
+    <div class="tt-abs-grid">
+
+        @foreach (var absence in Model.Absences)
+        {
+
+            <div class="tt-abs-card">
+
+                <div class="tt-abs-top">
+
+                    <div>
+                        <div class="tt-abs-title">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            @absence.FormationTitle
+                        </div>
+
+                        <div class="tt-abs-date">
+                            <i class="fa-regular fa-calendar"></i>
+                            @absence.Date.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+
+                    <span class="tt-pill tt-pill-danger">Absent</span>
+
+                </div>
+
+
+
+                <div class="tt-status-box">
+
+                    <div class="tt-status-row">
+
+                        <span class="tt-status-label">
+                            Statut justification
+                        </span>
+
+
+                        @if (absence.AbsenceStatus == "En attente")
+                        {
+                            <span class="tt-pill tt-pill-warning">
+                                En attente
+                            </span>
+                        }
+                        else if (absence.AbsenceStatus == "Accepté")
+                        {
+                            <span class="tt-pill tt-pill-success">
+                                Accepté
+                            </span>
+                        }
+                        else if (absence.AbsenceStatus == "Refusé")
+                        {
+                            <span class="tt-pill tt-pill-danger">
+                                Refusé
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="tt-pill tt-pill-muted">
+                                Non justifiée
+                            </span>
+                        }
+
+                    </div>
+
+
+                    @if (!string.IsNullOrEmpty(absence.JustificationFile))
+                    {
+
+                        <div class="tt-status-sent">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            Justificatif envoyé
+                        </div>
+
+                    }
+
+                </div>
+
+
+
+                @if (string.IsNullOrEmpty(absence.JustificationFile)
+                    || absence.AbsenceStatus == "Refusé")
+                {
+
+                    <form asp-action="UploadJustification"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="participantId"
+                               value="@absence.ParticipantId" />
+
+
+                        <label class="tt-upload-label">
+                            Ajouter un justificatif PDF
+                        </label>
+
+                        <div class="tt-upload-zone">
+                            <input type="file"
+                                   name="file"
+                                   accept=".pdf"
+                                   required />
+                        </div>
+
+
+                        <button type="submit"
+                                class="tt-btn tt-btn-danger">
+
+                            <i class="fa-solid fa-upload"></i>
+                            Envoyer
+
+                        </button>
+
+                    </form>
+
+                }
+                else
+                {
+
+                    <button class="tt-btn tt-btn-disabled"
+                            disabled>
+
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        Justificatif déjà envoyé
+
+                    </button>
+
+                }
+
+
+            </div>
+
+        }
+
+    </div>
+
+}

@@ -1,0 +1,829 @@
+﻿@{
+    ViewData["Title"] = "Reporting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+
+
+    .reporting-container {
+        padding: 0;
+    }
+
+
+
+    .reporting-header {
+        margin-bottom: 22px;
+    }
+
+
+
+    .reporting-title {
+        color: #14297a;
+        font-size: 26px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+        .reporting-title i {
+            color: #6d5ffb;
+        }
+
+
+
+    .reporting-subtitle {
+        color: #64748b;
+        margin-top: 6px;
+        font-size: 14px;
+    }
+
+
+
+
+
+
+    .reporting-grid {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+
+
+
+
+
+    .report-card {
+        background: white;
+        border-radius: 18px;
+        padding: 22px 18px;
+        text-decoration: none;
+        border: 1px solid #eef0f5;
+        text-align: center;
+        transition: .25s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 3px 10px rgba(20,41,122,.03);
+    }
+
+
+
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(20,41,122,.12);
+        }
+
+
+
+
+
+
+
+    .icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 16px;
+        font-size: 24px;
+    }
+
+
+
+
+    .title {
+        color: #14297a;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+
+
+    .desc {
+        color: #64748b;
+        font-size: 12.5px;
+        line-height: 1.5;
+        margin-bottom: 18px;
+        min-height: 55px;
+    }
+
+
+
+    .card-btn {
+        border: none;
+        border-radius: 9px;
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 13px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        background: transparent;
+    }
+
+
+
+        .card-btn i {
+            font-size: 11px;
+        }
+
+
+
+
+
+
+
+
+    /* COLORS */
+
+
+    .formation .icon {
+        background: #ede9fe;
+        color: #7b2cbf;
+    }
+
+    .formation .card-btn {
+        background: #ede9fe;
+        color: #7b2cbf;
+    }
+
+
+
+
+    .employee .icon {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .employee .card-btn {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+
+
+
+    .budget .icon {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .budget .card-btn {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+
+
+
+    .attendance .icon {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+    .attendance .card-btn {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+
+
+
+    .ai .icon {
+        background: #eef2ff;
+        color: #4338ca;
+    }
+
+    .ai .card-btn {
+        background: #eef2ff;
+        color: #4338ca;
+    }
+
+
+
+
+
+
+
+
+
+    /* BOTTOM ROW */
+    .bottom-row {
+        display: block;
+        width: 100%;
+    }
+
+
+
+
+
+
+
+
+    /* RAPPORTS RECENTS */
+
+    .reports-box {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+        border: 1px solid #eef0f5;
+        box-shadow: 0 3px 10px rgba(20,41,122,.03);
+    }
+
+
+
+    .reports-box-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+
+
+    .reports-box-title {
+        color: #14297a;
+        font-size: 17px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+        .reports-box-title i {
+            color: #4338ca;
+        }
+
+
+
+    .view-all {
+        color: #4338ca;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+
+
+    table.reports-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+
+    .reports-table th {
+        color: #94a3b8;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        text-align: left;
+        font-weight: 700;
+        padding: 8px 10px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+
+
+    .reports-table td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #f8fafc;
+        font-size: 13.5px;
+        color: #334155;
+        vertical-align: middle;
+    }
+
+
+
+    .report-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+
+
+    .report-file-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+
+
+    .pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+
+    .pill-formation {
+        background: #ede9fe;
+        color: #7b2cbf;
+    }
+
+    .pill-employee {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .pill-budget {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .pill-attendance {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+    .pill-ai {
+        background: #eef2ff;
+        color: #4338ca;
+    }
+
+
+
+    .format-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+
+
+    .format-pdf {
+        color: #dc2626;
+    }
+
+    .format-excel {
+        color: #16a34a;
+    }
+
+
+
+    .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+
+
+    .status-done {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+
+
+    .status-progress {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+
+
+    .actions-cell {
+        color: #94a3b8;
+        cursor: pointer;
+        text-align: right;
+    }
+
+
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 18px;
+    }
+
+
+
+    .page-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+
+
+        .page-btn.active {
+            background: #14297a;
+            color: white;
+            border-color: #14297a;
+        }
+
+
+
+
+
+
+
+
+
+    /* ASSISTANT IA PANEL */
+
+    .ai-panel {
+        background: linear-gradient(180deg,#eef1ff 0%, #f7f8ff 40%);
+        border-radius: 18px;
+        padding: 22px;
+        border: 1px solid #e6e8fb;
+        position: relative;
+        overflow: hidden;
+    }
+
+
+
+    .ai-panel-title {
+        color: #14297a;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+        position: relative;
+        z-index: 1;
+    }
+
+
+
+        .ai-panel-title i {
+            color: #4338ca;
+        }
+
+
+
+    .ai-panel-subtitle {
+        color: #64748b;
+        font-size: 12.5px;
+        margin-bottom: 16px;
+        position: relative;
+        z-index: 1;
+    }
+
+
+
+    .ai-chip {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: white;
+        border: 1px solid #e6e8fb;
+        color: #4338ca;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        transition: .15s;
+    }
+
+
+
+        .ai-chip:hover {
+            background: #eef2ff;
+        }
+
+
+
+    .ai-textarea {
+        width: 100%;
+        min-height: 90px;
+        border-radius: 12px;
+        border: 1px solid #e6e8fb;
+        padding: 12px 14px;
+        resize: none;
+        font-size: 13px;
+        margin-top: 6px;
+        background: white;
+        position: relative;
+        z-index: 1;
+    }
+
+
+        .ai-textarea:focus {
+            outline: none;
+            border-color: #6d5ffb;
+        }
+
+
+
+    .ai-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+
+
+    .char-count {
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+
+
+    .btn-analyser {
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 600;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+
+        .btn-analyser:hover {
+            background: #4338ca;
+        }
+
+
+
+    .ai-panel::after {
+        content: "";
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 140px;
+        height: 140px;
+        background-image: radial-gradient(circle, #c7d2fe 1.5px, transparent 1.5px);
+        background-size: 12px 12px;
+        opacity: .5;
+        z-index: 0;
+    }
+
+
+
+
+
+
+
+
+    @@media (max-width: 1200px) {
+
+        .reporting-grid {
+            grid-template-columns: repeat(3,1fr);
+        }
+
+        .bottom-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+
+
+
+    @@media (max-width: 700px) {
+
+        .reporting-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>
+
+
+
+
+
+
+<div class="reporting-container">
+
+
+
+    <div class="reporting-header">
+
+        <div class="reporting-title">
+
+            <i class="fa-solid fa-chart-line"></i>
+            Reporting Formation
+
+        </div>
+
+        <div class="reporting-subtitle">
+
+            Analyse et génération des rapports de gestion des formations
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- CARDS -->
+
+    <div class="reporting-grid">
+
+        <a asp-controller="Reporting" asp-action="Formations" class="report-card formation">
+            <div class="icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="title">Rapport Formations</div>
+            <div class="desc">Analyse des formations réalisées, des sessions et des statistiques associées.</div>
+            <span class="card-btn">Générer <i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+
+        <a asp-controller="Reporting" asp-action="Employee" class="report-card employee">
+            <div class="icon"><i class="fa-solid fa-user-tie"></i></div>
+            <div class="title">Rapport Employés</div>
+            <div class="desc">Historique des formations suivies par les employés et taux de participation.</div>
+            <span class="card-btn">Ouvrir <i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+
+        <a asp-controller="Reporting" asp-action="Budget" class="report-card budget">
+            <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+            <div class="title">Rapport Budget</div>
+            <div class="desc">Analyse des coûts des formations par période, département et type.</div>
+            <span class="card-btn">Générer <i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+
+        <a asp-controller="Reporting" asp-action="Assistant" class="report-card ai">
+            <div class="icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="title">Assistant IA</div>
+            <div class="desc">Analyse intelligente et génération automatique de rapports personnalisés.</div>
+            <span class="card-btn">Ouvrir <i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+
+    </div>
+
+
+
+
+    <!-- BOTTOM ROW : TABLE + AI -->
+
+    <div class="bottom-row">
+
+
+        <!-- RAPPORTS RECENTS -->
+
+        <div class="reports-box">
+
+            <div class="reports-box-header">
+
+                <div class="reports-box-title">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Rapports récents générés
+                </div>
+
+            </div>
+
+
+            <table class="reports-table">
+
+                <thead>
+                    <tr>
+                        <th>Nom du rapport</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Format</th>
+                        <th>Statut</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>
+                            <div class="report-name">
+                                <span class="report-file-icon" style="background:#ede9fe;color:#7b2cbf;"><i class="fa-solid fa-file-lines"></i></span>
+                                Rapport Excel Avancé – Juillet 2026
+                            </div>
+                        </td>
+                        <td><span class="pill pill-formation">Rapport Formations</span></td>
+                        <td>28/07/2026 10:30</td>
+                        <td><div class="format-cell"><i class="fa-solid fa-file-pdf format-pdf"></i> PDF</div></td>
+                        <td><span class="status status-done"><i class="fa-solid fa-circle-check"></i> Terminé</span></td>
+                        <td class="actions-cell"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="report-name">
+                                <span class="report-file-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-file-lines"></i></span>
+                                Historique employés – Management & Leadership
+                            </div>
+                        </td>
+                        <td><span class="pill pill-employee">Rapport Employés</span></td>
+                        <td>31/07/2026 16:15</td>
+                        <td><div class="format-cell"><i class="fa-solid fa-file-excel format-excel"></i> Excel</div></td>
+                        <td><span class="status status-done"><i class="fa-solid fa-circle-check"></i> Terminé</span></td>
+                        <td class="actions-cell"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="report-name">
+                                <span class="report-file-icon" style="background:#ffedd5;color:#ea580c;"><i class="fa-solid fa-file-lines"></i></span>
+                                Budget – Ressources Humaines
+                            </div>
+                        </td>
+                        <td><span class="pill pill-budget">Rapport Budget</span></td>
+                        <td>05/08/2026 09:45</td>
+                        <td><div class="format-cell"><i class="fa-solid fa-file-pdf format-pdf"></i> PDF</div></td>
+                        <td><span class="status status-done"><i class="fa-solid fa-circle-check"></i> Terminé</span></td>
+                        <td class="actions-cell"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="report-name">
+                                <span class="report-file-icon" style="background:#e0f2fe;color:#0284c7;"><i class="fa-solid fa-file-lines"></i></span>
+                                Présence – Sécurité
+                            </div>
+                        </td>
+                        <td><span class="pill pill-attendance">Rapport Présence</span></td>
+                        <td>11/08/2026 11:20</td>
+                        <td><div class="format-cell"><i class="fa-solid fa-file-excel format-excel"></i> Excel</div></td>
+                        <td><span class="status status-done"><i class="fa-solid fa-circle-check"></i> Terminé</span></td>
+                        <td class="actions-cell"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="report-name">
+                                <span class="report-file-icon" style="background:#eef2ff;color:#4338ca;"><i class="fa-solid fa-file-lines"></i></span>
+                                Rapport Informatique – Août 2026
+                            </div>
+                        </td>
+                        <td><span class="pill pill-formation">Rapport Formations</span></td>
+                        <td>14/08/2026 14:05</td>
+                        <td><div class="format-cell"><i class="fa-solid fa-file-pdf format-pdf"></i> PDF</div></td>
+                        <td><span class="status status-done"><i class="fa-solid fa-circle-check"></i> Terminé</span></td>
+                        <td class="actions-cell"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+            <div class="pagination">
+                <button type="button" class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button type="button" class="page-btn active">1</button>
+                <button type="button" class="page-btn">2</button>
+                <button type="button" class="page-btn">3</button>
+                <button type="button" class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

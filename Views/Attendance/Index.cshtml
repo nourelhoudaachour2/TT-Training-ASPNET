@@ -1,0 +1,640 @@
+﻿@model IEnumerable<Training_tunisie_telecome.Models.SessionFormation>
+
+@{
+    ViewData["Title"] = "Présence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+
+<style>
+
+
+    .attendance-container {
+        font-family: 'Plus Jakarta Sans',sans-serif;
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,.03);
+    }
+
+
+
+
+
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+
+
+
+    .page-title {
+        color: #14297a;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+
+
+
+    .search-box {
+        flex: 1;
+        position: relative;
+    }
+
+
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+
+
+        .search-box input {
+            width: 100%;
+            height: 44px;
+            padding-left: 42px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+
+
+
+
+    .filter-select {
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 0 15px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 13px;
+    }
+
+
+
+
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 18px;
+    }
+
+
+
+
+    @@media(max-width:1300px) {
+
+        .cards-container {
+            grid-template-columns: repeat(3,1fr);
+        }
+    }
+
+
+
+    @@media(max-width:992px) {
+
+        .cards-container {
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+
+
+
+
+
+    .session-card {
+        border-radius: 16px;
+        padding: 18px 20px;
+        background: white;
+        box-shadow: 0 4px 16px rgba(15,23,42,.03);
+        transition: .2s;
+        border: 1.5px solid #bae6fd;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+        .session-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        }
+
+
+
+
+
+
+    .card-header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+
+
+
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+
+
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+
+    .status-current {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+
+
+    .status-finished {
+        background: #e5e7eb;
+        color: #475569;
+    }
+
+
+
+
+
+
+    .card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.4;
+        margin-bottom: 15px;
+    }
+
+
+
+
+
+
+    .card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+
+
+    .card-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12.5px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+
+
+        .card-info i {
+            width: 16px;
+            color: #94a3b8;
+        }
+
+
+
+
+
+
+    .participants-box {
+        background: #f1f5ff;
+        border-radius: 12px;
+        padding: 10px;
+        color: #14297a;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+
+
+
+
+
+    .btn-attendance {
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: white;
+        border: 1px solid #2563eb;
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+
+        .btn-attendance:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+</style>
+
+
+
+
+<div class="attendance-container">
+
+
+    <div class="top-actions">
+
+
+
+
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input id="searchAttendance"
+                   placeholder="Rechercher une formation..." />
+
+        </div>
+
+
+
+
+        <select id="statusFilter" class="filter-select">
+
+            <option value="">
+                Statut : Tous
+            </option>
+
+            <option value="encours">
+                En cours
+            </option>
+
+            <option value="terminee">
+                Terminée
+            </option>
+
+        </select>
+
+
+
+    </div>
+    <div class="cards-container" id="attendanceCards">
+
+
+        @foreach (var session in Model)
+        {
+
+            var status =
+                DateTime.Today <= session.DateEnd.Date
+                ? "encours"
+                : "terminee";
+
+
+            var statusText =
+                status == "encours"
+                ? "En cours"
+                : "Terminée";
+
+
+
+            <div class="session-card"
+                 data-status="@status"
+                 data-search="@($"{session.Formation?.Title} {session.Location} {session.Trainer?.FirstName} {session.Trainer?.LastName}")">
+
+
+
+
+
+                <div class="card-header-flex">
+
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-graduation-cap"></i>
+
+                    </div>
+
+
+
+
+
+                    @if (status == "encours")
+                    {
+
+                        <span class="status-badge status-current">
+
+                            @statusText
+
+                        </span>
+
+                    }
+                    else
+                    {
+
+                        <span class="status-badge status-finished">
+
+                            @statusText
+
+                        </span>
+
+                    }
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div class="card-title">
+
+
+                    @session.Formation?.Title
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="card-details">
+
+
+
+                    <div class="card-info">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+
+                        <span>
+
+                            @session.DateStart.ToString("dd/MM/yyyy")
+
+                            -
+
+                            @session.DateEnd.ToString("dd/MM/yyyy")
+
+                        </span>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="card-info">
+
+
+                        <i class="fa-solid fa-user-tie"></i>
+
+
+                        <span>
+
+                            @session.Trainer?.FirstName
+
+                            @session.Trainer?.LastName
+
+                        </span>
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="card-info">
+
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+
+                        <span>
+
+                            @session.Location
+
+                        </span>
+
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="participants-box">
+
+
+                    <i class="fa-solid fa-users"></i>
+
+
+                    @(session.Participants?.Count ?? 0)
+
+                    Participants
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <a asp-action="Take"
+                   asp-route-id="@session.Id"
+                   class="btn-attendance">
+
+
+                    <i class="fa-solid fa-check"></i>
+
+
+                    Saisir présence
+
+
+                </a>
+
+
+
+
+
+            </div>
+
+
+
+        }
+
+
+
+    </div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+
+    function filterAttendance() {
+
+
+        let search =
+            document.getElementById("searchAttendance")
+                .value
+                .toLowerCase();
+
+
+
+        let status =
+            document.getElementById("statusFilter")
+                .value;
+
+
+
+
+
+        document.querySelectorAll(".session-card")
+            .forEach(card => {
+
+
+                let text =
+                    card.dataset.search.toLowerCase();
+
+
+
+                let cardStatus =
+                    card.dataset.status;
+
+
+
+
+                let matchSearch =
+                    text.includes(search);
+
+
+
+                let matchStatus =
+                    !status || status === cardStatus;
+
+
+
+
+
+                card.style.display =
+                    matchSearch && matchStatus
+                        ?
+                        ""
+                        :
+                        "none";
+
+
+
+            });
+
+
+
+    }
+
+
+
+
+
+
+
+    document
+        .getElementById("searchAttendance")
+        .addEventListener(
+            "keyup",
+            filterAttendance
+        );
+
+
+
+
+
+
+    document
+        .getElementById("statusFilter")
+        .addEventListener(
+            "change",
+            filterAttendance
+        );
+
+
+
+</script>
