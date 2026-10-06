@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using Training_tunisie_telecome.Data;
@@ -9,11 +10,12 @@ namespace Training_tunisie_telecome.Controllers
 {
     public class EmployeesController : Controller
     {
-
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
+        private readonly PasswordHasher<Employee> _passwordHasher = new();
 
+        private const string DefaultEmployeePassword = "TT@2026";
 
 
         public EmployeesController(
@@ -28,50 +30,39 @@ namespace Training_tunisie_telecome.Controllers
 
 
 
-
-
-
-
         // ================= INDEX =================
 
         public async Task<IActionResult> Index()
         {
-
             var employees = await _context.Employees
-                .Include(e => e.Service)
+                .Include(e => e.Domain)
                 .ToListAsync();
 
-
             return View(employees);
-
         }
+
+
 
         // ================= CREATE GET =================
 
-
         public IActionResult Create()
         {
-
             LoadSelectLists();
 
-
             return View();
-
         }
 
-        // ================= CREATE POST =================
 
+
+        // ================= CREATE POST =================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             Employee employee,
-            IFormFile? image)
+            IFormFile? image,
+            bool createAuthenticationAccount = false)
         {
-
-
-
-            // matricule unique
 
             if (await _context.Employees
                 .AnyAsync(e => e.Matricule == employee.Matricule))
@@ -82,54 +73,67 @@ namespace Training_tunisie_telecome.Controllers
             }
 
 
-
+            if (createAuthenticationAccount &&
+                await _context.Employees.AnyAsync(e =>
+                    e.AuthenticationEnabled &&
+                    e.Email == employee.Email))
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "Un compte d'authentification existe déjà avec cet email");
+            }
 
 
             if (ModelState.IsValid)
             {
 
-
                 if (image != null)
                 {
-
                     employee.ImagePath =
                         await UploadImage(image);
-
                 }
 
 
+                if (createAuthenticationAccount)
+                {
+                    employee.AuthenticationEnabled = true;
+                    employee.MustChangePassword = true;
+
+                    employee.PasswordHash =
+                        _passwordHasher.HashPassword(
+                            employee,
+                            DefaultEmployeePassword);
+                }
+                else
+                {
+                    employee.AuthenticationEnabled = false;
+                    employee.MustChangePassword = false;
+                    employee.PasswordHash = null;
+                }
 
 
                 _context.Employees.Add(employee);
-
 
                 await _context.SaveChangesAsync();
 
 
                 return RedirectToAction(nameof(Index));
-
             }
 
 
-
+            ViewBag.CreateAuthenticationAccount =
+                createAuthenticationAccount;
 
             LoadSelectLists();
 
-
             return View(employee);
-
         }
 
 
 
 
 
-
-
-
-
         // ================= DETAILS =================
-
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -138,32 +142,23 @@ namespace Training_tunisie_telecome.Controllers
                 return NotFound();
 
 
-
             var employee = await _context.Employees
-                .Include(e => e.Service)
+                .Include(e => e.Domain)
                 .FirstOrDefaultAsync(e => e.Id == id);
-
 
 
             if (employee == null)
                 return NotFound();
 
 
-
             return View(employee);
-
         }
 
 
 
 
 
-
-
-
-
         // ================= EDIT GET =================
-
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -172,34 +167,22 @@ namespace Training_tunisie_telecome.Controllers
                 return NotFound();
 
 
-
             var employee = await _context.Employees
                 .FindAsync(id);
-
 
 
             if (employee == null)
                 return NotFound();
 
 
-
             LoadSelectLists();
 
 
-
             return View(employee);
-
         }
 
 
 
-
-
-
-
-
-
-        // ================= EDIT POST =================
 
 
         // ================= EDIT POST =================
@@ -211,6 +194,7 @@ namespace Training_tunisie_telecome.Controllers
             Employee employee,
             IFormFile? image)
         {
+
             if (id != employee.Id)
                 return NotFound();
 
@@ -224,18 +208,44 @@ namespace Training_tunisie_telecome.Controllers
                 return NotFound();
 
 
+            if (oldEmployee.AuthenticationEnabled &&
+                await _context.Employees.AnyAsync(e =>
+                    e.Id != id &&
+                    e.AuthenticationEnabled &&
+                    e.Email == employee.Email))
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "Un compte d'authentification existe déjà avec cet email");
+            }
+
+
 
             if (ModelState.IsValid)
             {
 
                 if (image != null)
                 {
-                    employee.ImagePath = await UploadImage(image);
+                    employee.ImagePath =
+                        await UploadImage(image);
                 }
                 else
                 {
-                    employee.ImagePath = oldEmployee.ImagePath;
+                    employee.ImagePath =
+                        oldEmployee.ImagePath;
                 }
+
+
+                // Ne jamais écraser le compte d'authentification
+                // lors d'une simple modification de l'employé.
+                employee.AuthenticationEnabled =
+                    oldEmployee.AuthenticationEnabled;
+
+                employee.PasswordHash =
+                    oldEmployee.PasswordHash;
+
+                employee.MustChangePassword =
+                    oldEmployee.MustChangePassword;
 
 
                 _context.Employees.Update(employee);
@@ -256,19 +266,15 @@ namespace Training_tunisie_telecome.Controllers
 
 
 
-
         // ================= DELETE =================
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
 
-
             var employee =
                 await _context.Employees.FindAsync(id);
-
 
 
             if (employee != null)
@@ -276,20 +282,13 @@ namespace Training_tunisie_telecome.Controllers
 
                 _context.Employees.Remove(employee);
 
-
                 await _context.SaveChangesAsync();
 
             }
 
 
-
             return RedirectToAction(nameof(Index));
-
         }
-
-
-
-
 
 
 
@@ -297,34 +296,27 @@ namespace Training_tunisie_telecome.Controllers
 
         // ================= LOAD SELECT LISTS =================
 
-
         private void LoadSelectLists()
         {
 
-
-            ViewBag.Services =
+            ViewBag.Domains =
                 new SelectList(
-                    _context.Services.ToList(),
+                    _context.Domains.ToList(),
                     "Id",
                     "Name"
                 );
 
 
-
             ViewBag.Grades =
                 new SelectList(
-                    ReadJsonFile(
-                    "GradesFile")
+                    ReadJsonFile("GradesFile")
                 );
-
 
 
             ViewBag.Residences =
                 new SelectList(
-                    ReadJsonFile(
-                    "ResidencesFile")
+                    ReadJsonFile("ResidencesFile")
                 );
-
 
         }
 
@@ -332,16 +324,10 @@ namespace Training_tunisie_telecome.Controllers
 
 
 
-
-
-
-
         // ================= READ JSON =================
-
 
         private List<string> ReadJsonFile(string key)
         {
-
 
             var path =
                 Path.Combine(
@@ -350,26 +336,18 @@ namespace Training_tunisie_telecome.Controllers
                 );
 
 
-
             if (!System.IO.File.Exists(path))
                 return new List<string>();
-
 
 
             var json =
                 System.IO.File.ReadAllText(path);
 
 
-
             return JsonSerializer
                 .Deserialize<List<string>>(json)
                 ?? new List<string>();
-
         }
-
-
-
-
 
 
 
@@ -377,10 +355,8 @@ namespace Training_tunisie_telecome.Controllers
 
         // ================= UPLOAD IMAGE =================
 
-
         private async Task<string> UploadImage(IFormFile image)
         {
-
 
             string[] allowed =
             {
@@ -390,11 +366,9 @@ namespace Training_tunisie_telecome.Controllers
             };
 
 
-
             var extension =
                 Path.GetExtension(image.FileName)
                 .ToLower();
-
 
 
             if (!allowed.Contains(extension))
@@ -402,8 +376,6 @@ namespace Training_tunisie_telecome.Controllers
                 throw new Exception(
                     "Format image non valide");
             }
-
-
 
 
             if (image.Length > 2 * 1024 * 1024)
@@ -414,8 +386,6 @@ namespace Training_tunisie_telecome.Controllers
 
 
 
-
-
             string folder =
                 Path.Combine(
                     _environment.WebRootPath,
@@ -423,10 +393,8 @@ namespace Training_tunisie_telecome.Controllers
                 );
 
 
-
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-
 
 
 
@@ -443,21 +411,15 @@ namespace Training_tunisie_telecome.Controllers
                 );
 
 
-
             using (var stream =
                 new FileStream(path, FileMode.Create))
             {
-
                 await image.CopyToAsync(stream);
-
             }
 
 
 
             return "/uploads/employees/" + fileName;
-
         }
-
-
     }
 }
