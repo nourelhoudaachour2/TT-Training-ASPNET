@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>ba0dffa5-7374-4192-bf75-566bfb47ca10</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,9 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="OpenAI" Version="2.13.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="QuestPDF" Version="2026.7.2" />
   </ItemGroup>
 
   <ItemGroup>
