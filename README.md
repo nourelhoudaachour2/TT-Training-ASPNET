@@ -1,6 +1,6 @@
 <div align="center">
 
-# Training Tunisie Télécom
+#  TT - Training 
 
 **Plateforme web de gestion des formations du personnel, avec assistant IA intégré**
 
